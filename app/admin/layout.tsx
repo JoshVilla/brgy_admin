@@ -16,13 +16,30 @@ interface AdminLayoutProps {
 const AdminLayout = ({ children }: AdminLayoutProps) => {
   const router = useRouter();
   const socket = useWebSocket();
+
+  // 🔔 Sound
   const bellRef = useRef<HTMLAudioElement | null>(null);
   const [canPlaySound, setCanPlaySound] = useState(false);
 
-  // Sidebar provider ref
+  // 📱 Desktop / Mobile detection
+  const [isDesktop, setIsDesktop] = useState(true);
+
+  // 🧭 Sidebar ref (shadcn)
   const sidebarRef = useRef<any>(null);
 
-  // Auto-play sound setup
+  // Detect screen size
+  useEffect(() => {
+    const checkScreen = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+
+    return () => window.removeEventListener("resize", checkScreen);
+  }, []);
+
+  // Allow sound after first user interaction
   useEffect(() => {
     bellRef.current = new Audio("/sound/notify.mp3");
 
@@ -36,7 +53,6 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   }, []);
 
   // WebSocket notifications
-
   useEffect(() => {
     if (!socket) return;
 
@@ -59,29 +75,28 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
 
       if (canPlaySound && bellRef.current) {
         bellRef.current.currentTime = 0;
-        bellRef.current.play().catch((err) => console.error(err));
+        bellRef.current.play().catch(console.error);
       }
     };
 
     socket.on("adminNotification", handleNotification);
 
-    // Cleanup function
     return () => {
       socket.off("adminNotification", handleNotification);
     };
   }, [socket, canPlaySound, router]);
 
-  // Close sidebar on mobile when clicking an item
+  // Close sidebar on mobile only
   const handleSidebarItemClick = () => {
-    if (window.innerWidth < 768 && sidebarRef.current) {
-      sidebarRef.current.close(); // Use provider's built-in close method
+    if (!isDesktop && sidebarRef.current) {
+      sidebarRef.current.close();
     }
   };
 
   return (
     <SidebarProvider
       ref={sidebarRef}
-      defaultOpen={false} // sidebar initially closed on mobile
+      defaultOpen={isDesktop}
       style={
         {
           "--sidebar-width": "calc(var(--spacing) * 72)",
@@ -90,6 +105,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
       }
     >
       <AppSidebar variant="inset" onItemClick={handleSidebarItemClick} />
+
       <SidebarInset>
         <SiteHeader />
         <div className="flex flex-1 flex-col">
