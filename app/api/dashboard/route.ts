@@ -1,8 +1,7 @@
-import { NextResponse } from "next/server";
-import Resident from "@/models/residentModel";
+import { NextResponse, NextRequest } from "next/server";
 import { GetTotalCountsController } from "@/controllers/dashboard/countDisplay";
 
-export async function POST(req: NextResponse) {
+export async function POST(req: NextRequest) {
   try {
     const response = await GetTotalCountsController();
 
