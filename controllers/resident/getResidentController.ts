@@ -16,6 +16,7 @@ export async function ResidentController({
 
   // Apply optional filters here
   const query: Record<string, any> = {};
+  if (filters._id) query._id = filters._id;
   if (filters.gender) query.gender = filters.gender;
   if (filters.purok) query.purok = filters.purok;
   if (filters.firstname) query.firstname = filters.firstname;
