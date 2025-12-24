@@ -30,6 +30,7 @@ export interface IResAnnouncement extends IAnnouncement {
 export interface IResRequest extends IRequest {
   _id: string;
   createdAt: string;
+  resident: IResResident;
 }
 
 export interface IResAdmin extends IAdmin {
