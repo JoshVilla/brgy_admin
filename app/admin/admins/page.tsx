@@ -124,14 +124,16 @@ const page = () => {
     <Container>
       <TitlePage title="Admins" />
       <div className="my-6">
-        <Button
-          className="cursor-pointer"
-          size="sm"
-          onClick={() => router.push("/admin/admins/addAdmin")}
-        >
-          <Plus />
-          Add Admin
-        </Button>
+        {adminInfo.isSuperAdmin && (
+          <Button
+            className="cursor-pointer"
+            size="sm"
+            onClick={() => router.push("/admin/admins/addAdmin")}
+          >
+            <Plus />
+            Add Admin
+          </Button>
+        )}
         <div>
           <SearchForm searchProps={searchProps} onSearch={handleSearch} />
 

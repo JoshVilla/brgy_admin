@@ -116,14 +116,14 @@ const UpdateRequest = ({ record, refetch }: Props) => {
                 <div>
                   <div className="text-sm font-medium">Gender</div>
                   <div className="text-sm text-gray-600">
-                    {record?.resident?.gender}
+                    {record?.resident?.gender || "unknown"}
                   </div>
                 </div>
 
                 <div>
                   <div className="text-sm font-medium">Age</div>
                   <div className="text-sm text-gray-600">
-                    {calculateAge(record?.resident?.birthdate)}
+                    {calculateAge(record?.resident?.birthdate) || "unknown"}
                   </div>
                 </div>
               </div>
