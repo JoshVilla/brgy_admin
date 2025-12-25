@@ -31,10 +31,7 @@ export async function PopulationGraphController() {
       population: populationByPurok[purok],
     }));
 
-    return {
-      data: populationArray,
-      isSuccess: true,
-    };
+    return populationArray;
   } catch (error: any) {
     console.error(error);
     return {

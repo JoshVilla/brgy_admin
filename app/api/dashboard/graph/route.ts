@@ -1,11 +1,18 @@
 import { NextResponse } from "next/server";
 import { PopulationGraphController } from "@/controllers/graph/populationGraphController";
+import { AgeGraphController } from "@/controllers/graph/ageGraphController";
 
 export async function POST() {
   try {
-    const response = await PopulationGraphController();
+    const population = await PopulationGraphController();
+    const age = await AgeGraphController();
 
-    return NextResponse.json(response);
+    const finalResponse = {
+      population,
+      age,
+    };
+
+    return NextResponse.json(finalResponse);
   } catch (error) {
     console.error("Error fetching data:", error);
     return NextResponse.json(

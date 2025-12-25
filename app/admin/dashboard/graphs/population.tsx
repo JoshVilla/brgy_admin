@@ -15,23 +15,18 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import { useQuery } from "@tanstack/react-query";
-import { getPopulationGraph } from "@/services/api";
 
-const PopulationGraph = () => {
-  const { data, isLoading } = useQuery({
-    queryKey: ["graph"],
-    queryFn: () => getPopulationGraph({}),
-  });
+interface Prop {
+  data: { location: string; population: number }[];
+}
 
+const PopulationGraph = ({ data }: Prop) => {
   const chartConfig = {
     desktop: {
       label: "Population",
       color: "var(--chart-1)",
     },
   } satisfies ChartConfig;
-
-  const graphData = data?.data;
 
   return (
     <div>
@@ -41,7 +36,7 @@ const PopulationGraph = () => {
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig}>
-            <BarChart accessibilityLayer data={graphData}>
+            <BarChart accessibilityLayer data={data}>
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="location"

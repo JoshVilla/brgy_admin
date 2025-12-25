@@ -88,6 +88,6 @@ export const getTotals = async (params: any): Promise<any> => {
 };
 
 // Graph for Dashboard
-export const getPopulationGraph = async (params: any): Promise<any> => {
+export const getDashboardGraph = async (params: any): Promise<any> => {
   return await post("/api/dashboard/graph", params);
 };
