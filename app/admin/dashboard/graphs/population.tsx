@@ -32,7 +32,7 @@ const PopulationGraph = ({ data }: Prop) => {
     <div>
       <Card>
         <CardHeader>
-          <CardTitle>Population per Puroks</CardTitle>
+          <CardTitle>Population by Puroks</CardTitle>
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig}>
@@ -49,7 +49,7 @@ const PopulationGraph = ({ data }: Prop) => {
                 cursor={false}
                 content={<ChartTooltipContent hideLabel />}
               />
-              <Bar dataKey="population" fill="#27A3F5" radius={8} />
+              <Bar dataKey="population" fill="#2B7FFF" radius={8} />
             </BarChart>
           </ChartContainer>
         </CardContent>

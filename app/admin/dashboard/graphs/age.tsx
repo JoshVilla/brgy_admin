@@ -27,7 +27,7 @@ export const AgeGraph = ({ data }: Prop) => {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart layout="vertical" width={600} height={400} data={data}>
+          <BarChart layout="vertical" data={data}>
             <CartesianGrid vertical={false} />
             <XAxis type="number" />
             <YAxis type="category" dataKey="range" />
@@ -35,7 +35,7 @@ export const AgeGraph = ({ data }: Prop) => {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="count" fill="#27A3F5" radius={[4, 4, 4, 4]} />
+            <Bar dataKey="count" fill="#2B7FFF" radius={[0, 4, 4, 0]} />
           </BarChart>
         </ChartContainer>
       </CardContent>
