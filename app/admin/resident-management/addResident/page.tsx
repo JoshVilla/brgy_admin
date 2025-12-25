@@ -2,7 +2,7 @@
 
 import TitlePage from "@/components/titlePage";
 import { Button } from "@/components/ui/button";
-import { Loader2, Plus } from "lucide-react";
+import { Download, Loader2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { z } from "zod";
@@ -115,7 +115,19 @@ const page = () => {
   return (
     <div>
       <TitlePage title="Add Resident" hasBack />
-      <ImportResidentExcel />
+      <div className="flex items-center gap-4">
+        <ImportResidentExcel />
+        <a href="/file/Laurel Resident Data.xlsx" download>
+          <Button
+            size="sm"
+            variant="default"
+            className="flex items-center gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Download Excel File
+          </Button>
+        </a>
+      </div>
       <div className="mt-4">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

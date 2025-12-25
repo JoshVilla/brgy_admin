@@ -8,6 +8,7 @@ import { formatDateTime } from "@/utils/nonAsyncHelpers";
 import { useQuery } from "@tanstack/react-query";
 import { Users, FileText, ShieldUser } from "lucide-react";
 import { useEffect, useState } from "react";
+import PopulationGraph from "./graphs/population";
 
 const page = () => {
   const [dateTime, setDateTime] = useState("");
@@ -85,6 +86,14 @@ const page = () => {
               label="Requests This Month"
               value={data?.totals.totalRequestsThisMonth}
             />
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 lg:grid-rows-5">
+            <div className="lg:col-span-2 lg:row-span-5">
+              <PopulationGraph />
+            </div>
+
+            <div className="lg:col-span-2 lg:row-span-5"></div>
           </div>
 
           {/* Events Section - Mobile (below cards) */}

@@ -27,9 +27,13 @@ export const ImportResidentExcel: React.FC = () => {
       formData.append("file", file);
       return await importResidents(formData);
     },
-    onSuccess: () => {
-      toast.success("Residents imported successfully.");
-      resetForm();
+    onSuccess: (data) => {
+      if (data.isSuccess) {
+        toast.success(data.message);
+        resetForm();
+      } else {
+        toast.error(data.message);
+      }
     },
     onError: (error) => {
       console.error("Failed to import residents:", error);
@@ -74,7 +78,7 @@ export const ImportResidentExcel: React.FC = () => {
           className="flex gap-2 items-center my-6"
         >
           <UploadCloud className="w-4 h-4" />
-          Add Data from Excel
+          Import from Excel
         </Button>
       </DialogTrigger>
       <DialogContent>

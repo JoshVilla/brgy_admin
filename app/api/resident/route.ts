@@ -6,7 +6,6 @@ export async function POST(req: NextRequest) {
     const { page = 1, limit = 10, ...filters } = await req.json();
 
     const response = await ResidentController({ page, limit, filters });
-
     return NextResponse.json(response);
   } catch (error) {
     console.error("Error fetching residents:", error);

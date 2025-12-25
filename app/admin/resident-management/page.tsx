@@ -69,7 +69,9 @@ const page = () => {
     }
     return residentData.map((data: IResResident) => (
       <TableRow key={data._id}>
-        <TableCell>{`${data.firstname} ${data.middlename} ${data.lastname}`}</TableCell>
+        <TableCell>{`${data.firstname} ${data.middlename} ${data.lastname} ${
+          data.suffix || ""
+        }`}</TableCell>
         <TableCell>{`${data.gender}`}</TableCell>
         <TableCell>{calculateAge(data.birthdate)}</TableCell>
         <TableCell>{`${data.purok}`}</TableCell>

@@ -86,3 +86,8 @@ export const updateProfile = async (params: any): Promise<any> => {
 export const getTotals = async (params: any): Promise<any> => {
   return await post("/api/dashboard", params);
 };
+
+// Graph for Dashboard
+export const getPopulationGraph = async (params: any): Promise<any> => {
+  return await post("/api/dashboard/graph", params);
+};
