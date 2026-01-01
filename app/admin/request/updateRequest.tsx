@@ -103,32 +103,6 @@ const UpdateRequest = ({ record, refetch }: Props) => {
           </DialogHeader>
           <div className="grid gap-4">
             <div>
-              <div>Resident's Information</div>
-
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <div className="text-sm font-medium">Name</div>
-                  <div className="text-sm text-gray-600">
-                    {`${record?.resident?.firstname} ${record?.resident?.middlename} ${record?.resident?.lastname}`}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="text-sm font-medium">Gender</div>
-                  <div className="text-sm text-gray-600">
-                    {record?.resident?.gender || "unknown"}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="text-sm font-medium">Age</div>
-                  <div className="text-sm text-gray-600">
-                    {calculateAge(record?.resident?.birthdate) || "unknown"}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div>
               <div className="text-sm font-medium">Reason</div>
               <div className="text-sm text-gray-600">{record.reason}</div>
             </div>

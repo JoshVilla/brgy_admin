@@ -4,7 +4,6 @@ import { MyRequestController } from "@/controllers/user/myRequestController";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    console.log(body, "bodybodybodybodybodybodybodybodybody");
     const response = await MyRequestController(body);
     return NextResponse.json(response);
   } catch (error: any) {

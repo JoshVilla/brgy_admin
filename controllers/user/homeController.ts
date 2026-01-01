@@ -19,12 +19,18 @@ export async function HomeController() {
         }
       : null;
 
-    const events = await Event.find({}).sort({ date: -1 }).limit(5);
-    const cleanEventsData = events.map((event) => ({
-      id: event._id,
+    const allEvents = await Event.find({}).sort({ datetime: 1 }).limit(20);
+
+    const now = new Date();
+    const upcomingEvents = allEvents
+      .filter((event) => new Date(event.datetime) >= now)
+      .slice(0, 3);
+
+    const cleanEventsData = upcomingEvents.map((event) => ({
+      id: event._id.toString(),
       title: event.title,
       description: event.description,
-      date: formatReadableDateTime(event.datetime),
+      datetime: event.datetime,
       venue: event.venue,
     }));
 
