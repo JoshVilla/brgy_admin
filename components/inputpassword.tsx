@@ -6,6 +6,7 @@ interface InputPasswordProps {
   errors: any;
   name: string; // The name of the input field
   placeholder?: string; // Optional placeholder
+  disabled?: boolean;
 }
 
 const InputPassword = ({
@@ -13,6 +14,7 @@ const InputPassword = ({
   errors,
   name,
   placeholder = "Enter Password",
+  disabled,
 }: InputPasswordProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -27,6 +29,7 @@ const InputPassword = ({
         type={showPassword ? "text" : "password"}
         placeholder={placeholder}
         {...register(name)}
+        disabled={disabled}
       />
       <div
         className="absolute right-2 top-4 transform -translate-y-1/2 text-sm cursor-pointer"
