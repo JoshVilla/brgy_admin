@@ -34,7 +34,9 @@ import {
 } from "@/components/ui/sidebar";
 import {
   Calendar1,
+  ChartGantt,
   FileText,
+  GitGraph,
   Megaphone,
   ShieldUser,
   Users2,
@@ -72,6 +74,11 @@ const data = {
       title: "Requests",
       url: "/admin/request/",
       icon: FileText,
+    },
+    {
+      title: "Analytics",
+      url: "/admin/analytics/",
+      icon: ChartGantt,
     },
     {
       title: "Admins",

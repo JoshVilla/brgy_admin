@@ -91,3 +91,8 @@ export const getTotals = async (params: any): Promise<any> => {
 export const getDashboardGraph = async (params: any): Promise<any> => {
   return await post("/api/dashboard/graph", params);
 };
+
+//analytics
+export const getAnalytics = async (params: any): Promise<any> => {
+  return await post("/api/analytics", params);
+};

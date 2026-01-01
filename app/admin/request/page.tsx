@@ -24,6 +24,7 @@ import { PaginationControls } from "@/components/paginationControl";
 import withAuth from "@/lib/withAuth";
 import { Loader2 } from "lucide-react";
 import Container from "@/components/container";
+import RequestStatus from "@/components/requestStatus";
 
 const page = () => {
   const {
@@ -68,7 +69,9 @@ const page = () => {
       <TableRow key={data._id}>
         <TableCell>{`${data.name}`}</TableCell>
         <TableCell>{`${requestTypeText(data.type)}`}</TableCell>
-        <TableCell>{`${data.status}`}</TableCell>
+        <TableCell>
+          <RequestStatus status={data.status} />
+        </TableCell>
         <TableCell>{formattedDate(data.createdAt)}</TableCell>
         <TableCell>
           <div className="flex gap-4">
@@ -160,13 +163,16 @@ const page = () => {
                         <span className="font-bold">Request for: </span>
                         <span>{requestTypeText(data.type)}</span>
                       </div>
-                      <div>
-                        <span className="font-bold">Status: </span>
-                        <span>{data.status}</span>
-                      </div>
+
                       <div>
                         <span className="font-bold">Requested last: </span>
                         <span>{formattedDate(data.createdAt)}</span>
+                      </div>
+                      <div>
+                        <span className="font-bold">Status: </span>
+                        <span>
+                          <RequestStatus status={data.status} />
+                        </span>
                       </div>
                       <div className="flex gap-4 mt-2">
                         {(data.status === STATUS.PENDING ||

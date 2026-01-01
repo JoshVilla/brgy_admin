@@ -74,11 +74,11 @@ const SearchForm = ({
   }, [searchProps, onSearch, onReset]);
 
   return (
-    <div className="flex gap-4 items-end my-4 flex-wrap">
+    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end my-4 flex-wrap">
       {searchProps.map((prop, index) => {
         if (prop.type === "input") {
           return (
-            <div key={index} className="flex flex-col gap-2">
+            <div key={index} className="flex flex-col gap-2 w-full sm:w-auto">
               {/* <span className="text-sm">{prop.label}</span> */}
               <Input
                 value={params[prop.name] || ""}
@@ -90,7 +90,7 @@ const SearchForm = ({
                   handleInputChange(prop.name, value);
                 }}
                 placeholder={prop.placeholder}
-                className="w-[200px]"
+                className="w-full sm:w-[200px]"
               />
             </div>
           );
@@ -98,13 +98,13 @@ const SearchForm = ({
 
         if (prop.type === "select") {
           return (
-            <div key={index} className="flex flex-col gap-2">
+            <div key={index} className="flex flex-col gap-2 w-full sm:w-auto">
               {/* <span className="text-sm">{prop.label}</span> */}
               <Select
                 value={params[prop.name]?.toString() || ""}
                 onValueChange={(value) => handleInputChange(prop.name, value)}
               >
-                <SelectTrigger className="w-[200px]">
+                <SelectTrigger className="w-full sm:w-[200px]">
                   <SelectValue placeholder={prop.placeholder} />
                 </SelectTrigger>
                 <SelectContent>
@@ -120,20 +120,20 @@ const SearchForm = ({
         }
       })}
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 w-full sm:w-auto">
         <Button
           variant="default"
           onClick={handleSearch}
-          className="cursor-pointer"
+          className="cursor-pointer flex-1 sm:flex-none"
           size="sm"
         >
-          <Search />
+          <Search className="mr-2 h-4 w-4" />
           Search
         </Button>
         <Button
           variant="outline"
           onClick={handleReset}
-          className="cursor-pointer"
+          className="cursor-pointer flex-1 sm:flex-none"
           size="sm"
         >
           Reset
