@@ -8,11 +8,14 @@ export async function POST() {
     return NextResponse.json(response);
   } catch (error: any) {
     console.error(error);
-    return {
-      message: "An error occurred while fetching the data.",
-      data: null,
-      isSuccess: false,
-      error: error.message || "Unknown error",
-    };
+    return NextResponse.json(
+      {
+        message: "An error occurred while fetching the data.",
+        data: null,
+        isSuccess: false,
+        error: error.message || "Unknown error",
+      },
+      { status: 500 }
+    );
   }
 }
