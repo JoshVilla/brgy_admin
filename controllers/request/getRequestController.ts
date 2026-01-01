@@ -19,37 +19,21 @@ export async function GetRequestController({
   // Apply filters
   if (filters.status) query.status = filters.status;
   if (filters.type) query.type = filters.type;
-  if (filters.userId) query.userId = filters.userId;
+  if (filters.userAppId) query.userAppId = filters.userAppId;
   if (filters.name) query.name = { $regex: filters.name, $options: "i" };
 
-  // Fetch requests with populated resident data (all fields)
+  // Fetch requests with populated resident data
   const requests = await Request.find(query)
     .skip(skip)
     .limit(limit)
     .sort({ createdAt: -1 })
-    .populate({
-      path: "userId",
-      model: "Resident",
-      // Remove the select to get all fields
-    })
+    .populate("resident") // Populate the virtual field
     .lean();
-
-  // Transform the data to have a clearer structure
-  const dataWithResident = requests.map((req: any) => {
-    const resident =
-      req.userId && typeof req.userId === "object" ? req.userId : null;
-
-    return {
-      ...req,
-      userId: resident?._id || req.userId, // Keep the original ID reference
-      resident: resident,
-    };
-  });
 
   const total = await Request.countDocuments(query);
 
   return {
-    data: dataWithResident,
+    data: requests,
     total,
     currentPage: page,
     totalPages: Math.ceil(total / limit),

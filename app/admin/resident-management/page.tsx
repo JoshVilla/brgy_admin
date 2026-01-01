@@ -3,7 +3,7 @@ import TitlePage from "@/components/titlePage";
 import { Button } from "@/components/ui/button";
 import { getResident } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
+import { BadgeCheckIcon, Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import {
@@ -27,6 +27,7 @@ import { calculateAge } from "@/utils/helpers";
 import withAuth from "@/lib/withAuth";
 import { useAuthGuard } from "@/hooks/authGuard";
 import Container from "@/components/container";
+import { Badge } from "@/components/ui/badge";
 const page = () => {
   const router = useRouter();
   const {
@@ -76,6 +77,18 @@ const page = () => {
         <TableCell>{calculateAge(data.birthdate)}</TableCell>
         <TableCell>{`${data.purok}`}</TableCell>
         <TableCell>
+          {data.isVerified ? (
+            <Badge
+              variant="secondary"
+              className="bg-blue-500 text-white dark:bg-blue-600"
+            >
+              <BadgeCheckIcon /> Verified
+            </Badge>
+          ) : (
+            <Badge variant="secondary">Not Verified</Badge>
+          )}
+        </TableCell>
+        <TableCell>
           <div className="flex gap-4">
             <DeleteResident
               id={data._id}
@@ -96,7 +109,14 @@ const page = () => {
     ));
   };
 
-  const tableHeaders = ["Name", "Gender", "Age", "Purok", "Actions"];
+  const tableHeaders = [
+    "Name",
+    "Gender",
+    "Age",
+    "Purok",
+    "Is Verified",
+    "Actions",
+  ];
   const residentData = data?.data || [];
 
   const handleSearch = (params: any) => {
@@ -168,6 +188,18 @@ const page = () => {
                 <Card>
                   <CardContent>
                     <div className="space-y-2 text-sm">
+                      <div>
+                        {resident.isVerified ? (
+                          <Badge
+                            variant="secondary"
+                            className="bg-blue-500 text-white dark:bg-blue-600"
+                          >
+                            <BadgeCheckIcon /> Verified
+                          </Badge>
+                        ) : (
+                          <Badge variant="secondary">Not Verified</Badge>
+                        )}
+                      </div>
                       <div>
                         <span className="font-semibold">Name: </span>
                         <span>{`${resident.firstname} ${resident.middlename} ${resident.lastname}`}</span>

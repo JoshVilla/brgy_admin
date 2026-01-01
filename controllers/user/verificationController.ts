@@ -35,7 +35,7 @@ export async function UserVerificationController(params: {
     }
 
     // Mark resident as verified
-    matchedResident.isVerified = true;
+    (matchedResident.isVerified = true), (matchedResident.userAppId = id);
     await matchedResident.save();
 
     // Mark user as verified

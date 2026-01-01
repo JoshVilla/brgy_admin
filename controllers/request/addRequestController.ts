@@ -36,7 +36,7 @@ export async function AddRequestController(formdata: FormData) {
       name,
       reason,
       type,
-      userId,
+      userAppId: userId,
       isVerified,
       imgProof,
     });

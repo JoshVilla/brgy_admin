@@ -10,7 +10,7 @@ export enum RequestStatus {
 
 // TypeScript interface for the request
 export interface IRequest extends mongoose.Document {
-  userId: string;
+  userAppId: string;
   name: string;
   status: RequestStatus;
   reason: string;
@@ -23,7 +23,7 @@ export interface IRequest extends mongoose.Document {
 // Mongoose schema definition
 const RequestSchema = new mongoose.Schema<IRequest>(
   {
-    userId: { type: String, required: true },
+    userAppId: { type: String, required: true },
     name: { type: String, required: true },
     status: {
       type: String,
@@ -38,6 +38,18 @@ const RequestSchema = new mongoose.Schema<IRequest>(
   },
   { timestamps: true }
 );
+
+// Add virtual populate for resident
+RequestSchema.virtual("resident", {
+  ref: "Resident",
+  localField: "userAppId",
+  foreignField: "userAppId",
+  justOne: true,
+});
+
+// Ensure virtuals are included in toJSON and toObject
+RequestSchema.set("toJSON", { virtuals: true });
+RequestSchema.set("toObject", { virtuals: true });
 
 // Export the model (with hot-reload-safe check)
 const Request =

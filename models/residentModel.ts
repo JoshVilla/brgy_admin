@@ -11,6 +11,7 @@ export interface IResident {
   isSeniorCitizen: boolean | string;
   isPwd: boolean | string;
   isVerified: boolean;
+  userAppId: string | null;
 }
 
 const ResidentSchema = new mongoose.Schema<IResident>(
@@ -25,6 +26,7 @@ const ResidentSchema = new mongoose.Schema<IResident>(
     isSeniorCitizen: { type: Boolean, required: true },
     isPwd: { type: Boolean, required: true },
     isVerified: { type: Boolean, default: false },
+    userAppId: { type: String, default: null },
   },
   { timestamps: true }
 );

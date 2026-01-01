@@ -21,7 +21,7 @@ export async function MyRequestController({
     console.log("Querying with userId:", userIdString);
     console.log("Page:", page, "Limit:", limit, "Skip:", skip);
 
-    const requests = await Request.find({ userId: userIdString })
+    const requests = await Request.find({ userAppId: userIdString })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)

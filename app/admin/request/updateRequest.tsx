@@ -97,16 +97,44 @@ const UpdateRequest = ({ record, refetch }: Props) => {
             className="text-sky-400 cursor-pointer scale-110"
           />
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-[625px]  max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Update Status</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4">
             <div>
-              <div className="text-sm font-medium">Reason</div>
-              <div className="text-sm text-gray-600">{record.reason}</div>
+              <h5 className="font-bold">Resident Information</h5>
+              <div className="flex flex-col gap-2 md:flex-row md:justify-between">
+                <div>
+                  <div className="text-sm font-medium">Name</div>
+                  <div className="text-sm text-gray-600">{record.name}</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Birthday</div>
+                  <div className="text-sm text-gray-600">
+                    {record.resident.birthdate}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Age</div>
+                  <div className="text-sm text-gray-600">
+                    {calculateAge(record.resident.birthdate)}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Gender</div>
+                  <div className="text-sm text-gray-600">
+                    {record.resident.gender}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Purok</div>
+                  <div className="text-sm text-gray-600">
+                    {record.resident.purok}
+                  </div>
+                </div>
+              </div>
             </div>
-
             <div>
               <div className="text-sm font-medium">Proof of Identity</div>
               <Zoom>
@@ -118,6 +146,10 @@ const UpdateRequest = ({ record, refetch }: Props) => {
                   alt="img proof"
                 />
               </Zoom>
+            </div>
+            <div>
+              <div className="text-sm font-medium">Reason</div>
+              <div className="text-sm text-gray-600">{record.reason}</div>
             </div>
             <div className="grid gap-3">
               <Label>Status</Label>
