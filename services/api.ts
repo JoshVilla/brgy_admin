@@ -96,3 +96,7 @@ export const getDashboardGraph = async (params: any): Promise<any> => {
 export const getAnalytics = async (params: any): Promise<any> => {
   return await post("/api/analytics", params);
 };
+
+export const getMonthlySummary = async (params: any): Promise<any> => {
+  return await post("/api/analytics/getMonthlySummary", params);
+};

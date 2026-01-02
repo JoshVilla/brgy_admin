@@ -28,11 +28,12 @@ import {
   Legend,
 } from "recharts";
 import { Users, UserCheck, Accessibility, UsersRound } from "lucide-react";
+import TitlePage from "@/components/titlePage";
 
 const ResidentsPage = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["analytics"],
-    queryFn: () => getAnalytics({}),
+    queryFn: () => getAnalytics({ type: 1 }),
   });
 
   if (isLoading) {
@@ -96,11 +97,11 @@ const ResidentsPage = () => {
 
   return (
     <Container>
-      <div className="text-xl font-bold mb-6">Residents Analytics</div>
+      <TitlePage title="Residents Analytics" />
 
       {/* Summary Cards */}
       {summary && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">

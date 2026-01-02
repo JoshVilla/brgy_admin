@@ -103,7 +103,7 @@ export async function ResidentGraphController() {
   } catch (error: any) {
     console.error(error);
     return {
-      message: "An error occurred while fetching the residents.",
+      message: "An error occurred while fetching the residents analytics.",
       data: null,
       isSuccess: false,
       error: error.message || "Unknown error",
