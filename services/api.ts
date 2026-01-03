@@ -100,3 +100,16 @@ export const getAnalytics = async (params: any): Promise<any> => {
 export const getMonthlySummary = async (params: any): Promise<any> => {
   return await post("/api/analytics/getMonthlySummary", params);
 };
+
+//blotter
+export const getBlotters = async (params: any): Promise<any> => {
+  return await post("/api/blotter", params);
+};
+
+export const addBlotter = async (params: any): Promise<any> => {
+  return await post("/api/blotter/addBlotter", params);
+};
+
+export const updateBlotter = async (params: any): Promise<any> => {
+  return await post("/api/blotter/editBlotter", params);
+};

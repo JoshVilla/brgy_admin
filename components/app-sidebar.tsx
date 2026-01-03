@@ -38,6 +38,7 @@ import {
   FileText,
   GitGraph,
   Megaphone,
+  MessageSquareWarning,
   ShieldUser,
   Users2,
 } from "lucide-react";
@@ -74,6 +75,11 @@ const data = {
       title: "Requests",
       url: "/admin/request/",
       icon: FileText,
+    },
+    {
+      title: "Blotters",
+      url: "/admin/blotters/",
+      icon: MessageSquareWarning,
     },
     {
       title: "Analytics",
