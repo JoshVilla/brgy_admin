@@ -41,6 +41,7 @@ import {
   MessageSquareWarning,
   ShieldUser,
   Users2,
+  Wrench,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -90,6 +91,11 @@ const data = {
       title: "Admins",
       url: "/admin/admins/",
       icon: ShieldUser,
+    },
+    {
+      title: "Settings",
+      url: "/admin/settings/",
+      icon: Wrench,
     },
   ],
   navClouds: [

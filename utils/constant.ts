@@ -18,7 +18,20 @@ export const STATUS = {
 };
 
 export const REQUEST_TYPE = {
-  BRGYCERT: 1,
+  // ✅ original (unchanged)
+  BRGYCLEARANCE: 1,
   BRGYINDIGENCY: 2,
   BRGYCEDULA: 3,
-};
+
+  // ➕ additional common barangay requests
+  BRGYRESIDENCY: 4,
+  BRGYBUSINESSCLEARANCE: 5,
+  BRGYGOODMORAL: 6,
+  BRGYNOINCOME: 7,
+  BRGYSOLOPARENT: 8,
+  BRGYSENIORCITIZEN: 9,
+  BRGYPWD: 10,
+  BRGYID: 11,
+  BRGYTRAVELCERT: 12,
+  BRGYEVENTPERMIT: 13,
+} as const;

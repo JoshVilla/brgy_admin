@@ -13,11 +13,34 @@ export const searchProps: any = [
     placeholder: "Choose Request Type",
     type: "select",
     options: [
-      { label: "Barangay Certificate", value: REQUEST_TYPE.BRGYCERT },
+      // ✅ existing (unchanged)
+      { label: "Barangay Clearance", value: REQUEST_TYPE.BRGYCLEARANCE },
       { label: "Barangay Indigency", value: REQUEST_TYPE.BRGYINDIGENCY },
-      { label: "Sedula", value: REQUEST_TYPE.BRGYCEDULA },
+      { label: "Cedula", value: REQUEST_TYPE.BRGYCEDULA },
+
+      // ➕ added common requests
+      { label: "Certificate of Residency", value: REQUEST_TYPE.BRGYRESIDENCY },
+      {
+        label: "Barangay Business Clearance",
+        value: REQUEST_TYPE.BRGYBUSINESSCLEARANCE,
+      },
+      { label: "Certificate of Good Moral", value: REQUEST_TYPE.BRGYGOODMORAL },
+      { label: "Certificate of No Income", value: REQUEST_TYPE.BRGYNOINCOME },
+      {
+        label: "Certificate of Solo Parent",
+        value: REQUEST_TYPE.BRGYSOLOPARENT,
+      },
+      {
+        label: "Certificate of Senior Citizen",
+        value: REQUEST_TYPE.BRGYSENIORCITIZEN,
+      },
+      { label: "Certificate of PWD", value: REQUEST_TYPE.BRGYPWD },
+      { label: "Barangay ID", value: REQUEST_TYPE.BRGYID },
+      { label: "Travel Certificate", value: REQUEST_TYPE.BRGYTRAVELCERT },
+      { label: "Barangay Event Permit", value: REQUEST_TYPE.BRGYEVENTPERMIT },
     ],
   },
+
   {
     label: "Status",
     name: "status",

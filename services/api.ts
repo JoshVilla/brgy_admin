@@ -113,3 +113,12 @@ export const addBlotter = async (params: any): Promise<any> => {
 export const updateBlotter = async (params: any): Promise<any> => {
   return await post("/api/blotter/editBlotter", params);
 };
+
+//settings
+export const getSettings = async (params: any): Promise<any> => {
+  return await post("/api/settings", params);
+};
+
+export const updateRequestSettings = async (params: any): Promise<any> => {
+  return await post("/api/settings/updateRequest", params);
+};

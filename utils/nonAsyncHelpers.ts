@@ -97,7 +97,7 @@ export function formatDateTime(rawDate: string | Date): string {
 
 export const requestTypeText = (val: number) => {
   const index = val - 1;
-  const arrText = ["Barangay Certificate", "Barangay Indigency", "Sedula"];
+  const arrText = ["Barangay Clearance", "Barangay Indigency", "Sedula"];
 
   return arrText[index];
 };
