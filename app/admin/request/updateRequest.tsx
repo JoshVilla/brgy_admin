@@ -29,6 +29,7 @@ import Image from "next/image";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 import { calculateAge } from "@/utils/helpers";
+import { requestTypeText } from "@/utils/nonAsyncHelpers";
 interface Props {
   record: IResRequest;
   refetch: () => void;
@@ -37,7 +38,7 @@ interface Props {
 const UpdateRequest = ({ record, refetch }: Props) => {
   const [status, setStatus] = useState(record.status || "");
   const [reasonOfCancellation, setReasonOfCancellation] = useState("");
-
+  const [userAppId, setUserAppId] = useState(record.resident.userAppId || "");
   const updateMutation = useMutation({
     mutationFn: updateStatusRequest,
     onSuccess: (data) => {
@@ -64,9 +65,13 @@ const UpdateRequest = ({ record, refetch }: Props) => {
       _id: string;
       status: string;
       reasonOfCancelation?: string;
+      userAppId: string;
+      requestType: string;
     } = {
       _id: record._id,
       status,
+      userAppId,
+      requestType: requestTypeText(record.type),
     };
 
     if (status === STATUS.CANCELLED) {
@@ -78,6 +83,7 @@ const UpdateRequest = ({ record, refetch }: Props) => {
 
   useEffect(() => {
     setStatus(record.status);
+    setUserAppId(record.resident.userAppId || "");
   }, [record]);
 
   return (
