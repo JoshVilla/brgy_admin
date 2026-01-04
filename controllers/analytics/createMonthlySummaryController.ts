@@ -143,10 +143,11 @@ export async function CreateMonthlySummaryController() {
     // Format request type stats
     const formattedRequestStats = [
       {
-        type: REQUEST_TYPE.BRGYCERT,
+        type: REQUEST_TYPE.BRGYCLEARANCE,
         typeName: "Barangay Certificate",
         count:
-          requestStats.find((s) => s._id === REQUEST_TYPE.BRGYCERT)?.count || 0,
+          requestStats.find((s) => s._id === REQUEST_TYPE.BRGYCLEARANCE)
+            ?.count || 0,
       },
       {
         type: REQUEST_TYPE.BRGYINDIGENCY,
@@ -180,15 +181,16 @@ export async function CreateMonthlySummaryController() {
     // Format processing time stats
     const formattedProcessingTime = [
       {
-        type: REQUEST_TYPE.BRGYCERT,
+        type: REQUEST_TYPE.BRGYCLEARANCE,
         typeName: "Barangay Certificate",
         avgProcessingTime:
           Math.round(
-            (processingTimeStats.find((s) => s._id === REQUEST_TYPE.BRGYCERT)
-              ?.avgProcessingTime || 0) * 10
+            (processingTimeStats.find(
+              (s) => s._id === REQUEST_TYPE.BRGYCLEARANCE
+            )?.avgProcessingTime || 0) * 10
           ) / 10,
         completedCount:
-          processingTimeStats.find((s) => s._id === REQUEST_TYPE.BRGYCERT)
+          processingTimeStats.find((s) => s._id === REQUEST_TYPE.BRGYCLEARANCE)
             ?.count || 0,
       },
       {
