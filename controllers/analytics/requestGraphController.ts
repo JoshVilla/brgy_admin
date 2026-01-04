@@ -1,6 +1,7 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import Request from "@/models/requestModel";
-import { REQUEST_TYPE } from "@/utils/constant"; // adjust path as needed
+import { REQUEST_TYPE } from "@/utils/constant";
+import { requestTypeText } from "@/utils/nonAsyncHelpers";
 
 export async function RequestGraphController() {
   try {
@@ -134,33 +135,45 @@ export async function RequestGraphController() {
     ]);
 
     // Format the request type stats with readable type names
-    const formattedStats = requestStats.map((stat) => {
-      let typeName = "Unknown";
-
-      switch (stat._id) {
-        case REQUEST_TYPE.BRGYCLEARANCE:
-          typeName = "Barangay Certificate";
-          break;
-        case REQUEST_TYPE.BRGYINDIGENCY:
-          typeName = "Barangay Indigency";
-          break;
-        case REQUEST_TYPE.BRGYCEDULA:
-          typeName = "Barangay Cedula";
-          break;
-      }
-
-      return {
-        type: stat._id,
-        typeName,
-        count: stat.count,
-      };
-    });
+    const formattedStats = requestStats.map((stat) => ({
+      type: stat._id,
+      typeName: requestTypeText(stat._id),
+      count: stat.count,
+    }));
 
     // Ensure all types are represented (even if count is 0)
     const allTypes = [
-      { type: REQUEST_TYPE.BRGYCLEARANCE, typeName: "Barangay Certificate" },
-      { type: REQUEST_TYPE.BRGYINDIGENCY, typeName: "Barangay Indigency" },
+      { type: REQUEST_TYPE.BRGYCLEARANCE, typeName: "Barangay Clearance" },
+      {
+        type: REQUEST_TYPE.BRGYINDIGENCY,
+        typeName: "Certificate of Indigency",
+      },
       { type: REQUEST_TYPE.BRGYCEDULA, typeName: "Barangay Cedula" },
+      {
+        type: REQUEST_TYPE.BRGYRESIDENCY,
+        typeName: "Certificate of Residency",
+      },
+      {
+        type: REQUEST_TYPE.BRGYBUSINESSCLEARANCE,
+        typeName: "Business Clearance",
+      },
+      {
+        type: REQUEST_TYPE.BRGYGOODMORAL,
+        typeName: "Certificate of Good Moral",
+      },
+      { type: REQUEST_TYPE.BRGYNOINCOME, typeName: "Certificate of No Income" },
+      {
+        type: REQUEST_TYPE.BRGYSOLOPARENT,
+        typeName: "Solo Parent Certificate",
+      },
+      {
+        type: REQUEST_TYPE.BRGYSENIORCITIZEN,
+        typeName: "Senior Citizen Certificate",
+      },
+      { type: REQUEST_TYPE.BRGYPWD, typeName: "PWD Certificate" },
+      { type: REQUEST_TYPE.BRGYID, typeName: "Barangay ID" },
+      { type: REQUEST_TYPE.BRGYTRAVELCERT, typeName: "Travel Certificate" },
+      { type: REQUEST_TYPE.BRGYEVENTPERMIT, typeName: "Event Permit" },
     ];
 
     const completeStats = allTypes.map((typeInfo) => {

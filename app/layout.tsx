@@ -12,7 +12,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  console.log("object");
   return (
     <html lang="en" suppressHydrationWarning>
       <body cz-shortcut-listen="true">

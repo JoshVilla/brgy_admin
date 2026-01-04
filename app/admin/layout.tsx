@@ -1,6 +1,12 @@
 "use client";
 
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import React, {
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -17,21 +23,19 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   const router = useRouter();
   const socket = useWebSocket();
 
-  // 🔔 Sound
+  // 🔔 Notification sound (single instance)
   const bellRef = useRef<HTMLAudioElement | null>(null);
-  const [canPlaySound, setCanPlaySound] = useState(false);
+  const audioUnlockedRef = useRef(false);
 
-  // 📱 Desktop / Mobile detection
+  // 📱 Screen size
   const [isDesktop, setIsDesktop] = useState(true);
 
-  // 🧭 Sidebar ref (shadcn)
-  const sidebarRef = useRef<any>(null);
+  // 🧭 Sidebar ref
+  const sidebarRef = useRef<{ close?: () => void } | null>(null);
 
-  // Detect screen size
+  /* ---------------- SCREEN SIZE ---------------- */
   useEffect(() => {
-    const checkScreen = () => {
-      setIsDesktop(window.innerWidth >= 768);
-    };
+    const checkScreen = () => setIsDesktop(window.innerWidth >= 768);
 
     checkScreen();
     window.addEventListener("resize", checkScreen);
@@ -39,26 +43,61 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
     return () => window.removeEventListener("resize", checkScreen);
   }, []);
 
-  // Allow sound after first user interaction
+  /* ---------------- AUDIO INIT ---------------- */
   useEffect(() => {
-    bellRef.current = new Audio("/sound/notify.mp3");
+    // Create and preload audio
+    const audio = new Audio("/sound/notify.mp3");
+    audio.preload = "auto";
+    audio.load();
+    bellRef.current = audio;
 
-    const allowSound = () => {
-      setCanPlaySound(true);
-      document.removeEventListener("click", allowSound);
+    // Unlock audio on user interaction
+    const unlockAudio = async () => {
+      // Only try if not already unlocked
+      if (audioUnlockedRef.current || !bellRef.current) return;
+
+      try {
+        // Attempt to play and immediately pause to unlock
+        bellRef.current.volume = 0;
+        await bellRef.current.play();
+        bellRef.current.pause();
+        bellRef.current.currentTime = 0;
+        bellRef.current.volume = 1;
+
+        audioUnlockedRef.current = true;
+        console.log("✅ Audio unlocked successfully");
+
+        // Remove listeners once unlocked
+        events.forEach((event) => {
+          document.removeEventListener(event, unlockAudio);
+        });
+      } catch (error) {
+        // Keep trying on subsequent interactions
+        console.log(
+          "⏳ Audio unlock attempt failed, will retry on next interaction"
+        );
+      }
     };
 
-    document.addEventListener("click", allowSound);
-    return () => document.removeEventListener("click", allowSound);
+    // Listen to multiple interaction types (no 'once' option)
+    const events = ["click", "keydown", "touchstart", "mousedown"];
+    events.forEach((event) => {
+      document.addEventListener(event, unlockAudio, { passive: true });
+    });
+
+    return () => {
+      events.forEach((event) => {
+        document.removeEventListener(event, unlockAudio);
+      });
+    };
   }, []);
 
-  // WebSocket notifications
-  useEffect(() => {
-    if (!socket) return;
-
-    const handleNotification = (data: any) => {
+  /* ---------------- SOCKET NOTIFICATIONS ---------------- */
+  const handleNotification = useCallback(
+    (data: any) => {
+      console.log(data);
       toast.success(data.message, {
-        description: data.data.requestType,
+        description: data.data.type,
         icon: <CheckCircle className="text-sky-500" width={20} />,
         style: {
           backgroundColor: "#e0f2fe",
@@ -69,32 +108,54 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
         descriptionClassName: "text-xs text-sky-700",
         action: {
           label: "Go",
-          onClick: () => router.push("/admin/request/"),
+          onClick: () => router.push("/admin/request"),
         },
       });
 
-      if (canPlaySound && bellRef.current) {
-        bellRef.current.currentTime = 0;
-        bellRef.current.play().catch(console.error);
+      // Play notification sound
+      if (bellRef.current) {
+        const playSound = async () => {
+          try {
+            bellRef.current!.currentTime = 0;
+            await bellRef.current!.play();
+            console.log("🔔 Notification sound played");
+          } catch (error) {
+            console.warn("❌ Audio playback failed:", error);
+            if (!audioUnlockedRef.current) {
+              console.log(
+                "💡 Click anywhere on the page to enable notification sounds"
+              );
+            }
+          }
+        };
+        playSound();
       }
-    };
+    },
+    [router]
+  );
+
+  useEffect(() => {
+    if (!socket) return;
 
     socket.on("adminNotification", handleNotification);
 
     return () => {
       socket.off("adminNotification", handleNotification);
     };
-  }, [socket, canPlaySound, router]);
+  }, [socket, handleNotification]);
 
-  // Close sidebar on mobile only
-  const handleSidebarItemClick = () => {
-    if (!isDesktop && sidebarRef.current) {
-      sidebarRef.current.close();
+  /* ---------------- SIDEBAR HANDLER ---------------- */
+  const handleSidebarItemClick = useCallback(() => {
+    if (!isDesktop) {
+      sidebarRef.current?.close?.();
     }
-  };
+  }, [isDesktop]);
+
+  /* ---------------- RENDER ---------------- */
 
   return (
     <SidebarProvider
+      //@ts-ignore
       ref={sidebarRef}
       defaultOpen={isDesktop}
       style={

@@ -1,6 +1,6 @@
+import mongoose from "mongoose";
 import { connectToDatabase } from "@/lib/mongodb";
 import Request from "@/models/requestModel";
-import Resident from "@/models/residentModel";
 
 export async function GetRequestController({
   page = 1,
@@ -12,6 +12,11 @@ export async function GetRequestController({
   filters: Record<string, any>;
 }) {
   await connectToDatabase();
+
+  // Ensure Resident model is registered
+  if (!mongoose.models.Resident) {
+    require("@/models/residentModel");
+  }
 
   const skip = (page - 1) * limit;
   const query: Record<string, any> = {};
@@ -27,7 +32,7 @@ export async function GetRequestController({
     .skip(skip)
     .limit(limit)
     .sort({ createdAt: -1 })
-    .populate("resident") // Populate the virtual field
+    .populate("resident")
     .lean();
 
   const total = await Request.countDocuments(query);

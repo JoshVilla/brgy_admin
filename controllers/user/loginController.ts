@@ -9,6 +9,7 @@ interface ILogin {
 
 export async function LoginController(params: ILogin) {
   try {
+    console.log(params);
     await connectToDatabase();
 
     const user = await User.findOne({ username: params.username });

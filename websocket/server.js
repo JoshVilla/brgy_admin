@@ -9,6 +9,8 @@ const io = new Server(httpServer, {
   cors: {
     origin: "*", // change this in production!
     methods: ["GET", "POST"],
+    pingInterval: 25000,
+    pingTimeout: 60000,
   },
 });
 
@@ -26,11 +28,11 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on("disconnect", () => {
-    console.log("❌ Client disconnected:", socket.id);
+  socket.on("disconnect", (reason) => {
+    console.log("❌ Client disconnected:", socket.id, reason);
   });
 });
 
-httpServer.listen(3000, () => {
-  console.log("🚀 WebSocket server running at http://localhost:3000");
+httpServer.listen(3001, "0.0.0.0", () => {
+  console.log("🚀 WebSocket server running at http://localhost:3001");
 });
