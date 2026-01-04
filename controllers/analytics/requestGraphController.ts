@@ -138,7 +138,7 @@ export async function RequestGraphController() {
       let typeName = "Unknown";
 
       switch (stat._id) {
-        case REQUEST_TYPE.BRGYCERT:
+        case REQUEST_TYPE.BRGYCLEARANCE:
           typeName = "Barangay Certificate";
           break;
         case REQUEST_TYPE.BRGYINDIGENCY:
@@ -158,7 +158,7 @@ export async function RequestGraphController() {
 
     // Ensure all types are represented (even if count is 0)
     const allTypes = [
-      { type: REQUEST_TYPE.BRGYCERT, typeName: "Barangay Certificate" },
+      { type: REQUEST_TYPE.BRGYCLEARANCE, typeName: "Barangay Certificate" },
       { type: REQUEST_TYPE.BRGYINDIGENCY, typeName: "Barangay Indigency" },
       { type: REQUEST_TYPE.BRGYCEDULA, typeName: "Barangay Cedula" },
     ];
