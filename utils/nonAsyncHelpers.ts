@@ -97,7 +97,21 @@ export function formatDateTime(rawDate: string | Date): string {
 
 export const requestTypeText = (val: number) => {
   const index = val - 1;
-  const arrText = ["Barangay Clearance", "Barangay Indigency", "Sedula"];
+  const arrText = [
+    "Barangay Clearance", // 1
+    "Certificate of Indigency", // 2
+    "Barangay Cedula", // 3
+    "Certificate of Residency", // 4
+    "Business Clearance", // 5
+    "Certificate of Good Moral", // 6
+    "Certificate of No Income", // 7
+    "Solo Parent Certificate", // 8
+    "Senior Citizen Certificate", // 9
+    "PWD Certificate", // 10
+    "Barangay ID", // 11
+    "Travel Certificate", // 12
+    "Event Permit", // 13
+  ];
 
-  return arrText[index];
+  return arrText[index] || "Unknown Request";
 };

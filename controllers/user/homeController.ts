@@ -1,6 +1,7 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import Announcement from "@/models/announcementModel";
 import Event from "@/models/eventModel";
+import Settings from "@/models/settingsModel";
 import { formatReadableDateTime } from "@/utils/backendhelpers";
 
 export async function HomeController() {
@@ -26,6 +27,10 @@ export async function HomeController() {
       .filter((event) => new Date(event.datetime) >= now)
       .slice(0, 3);
 
+    //get  the request
+    const settings = await Settings.findById("SYSTEM_SETTINGS");
+    const request = settings.request;
+
     const cleanEventsData = upcomingEvents.map((event) => ({
       id: event._id.toString(),
       title: event.title,
@@ -40,6 +45,7 @@ export async function HomeController() {
       data: {
         announcement: cleanAnnouncementData,
         events: cleanEventsData,
+        request,
       },
     };
   } catch (error) {
