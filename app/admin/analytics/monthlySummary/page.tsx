@@ -2,7 +2,7 @@
 
 import Container from "@/components/container";
 import TitlePage from "@/components/titlePage";
-import { getMonthlySummary } from "@/services/api";
+import { getMonthlySummary, getSummaryAI } from "@/services/api";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import {
@@ -12,13 +12,10 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
   Cell,
   PieChart,
   Pie,
-  LineChart,
-  Line,
   Area,
   AreaChart,
 } from "recharts";
@@ -34,7 +31,6 @@ import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -53,7 +49,6 @@ import {
 import { toast } from "sonner";
 
 const MonthlySummary = () => {
-  // Get last month as initial values
   const now = new Date();
   const lastMonth = now.getMonth() === 0 ? 11 : now.getMonth() - 1;
   const lastMonthYear =
@@ -69,90 +64,16 @@ const MonthlySummary = () => {
       getMonthlySummary({ year: selectedYear, month: selectedMonth }),
   });
 
-  // AI Summary Mutation
+  // AI Summary Mutation - Now calls backend route
   const summaryMutation = useMutation({
-    mutationFn: async (summaryData: any) => {
-      const prompt = `You are an analytics assistant for a Barangay (Filipino local government unit) management system.
-
-Analyze the following monthly report data and provide a clear, professional executive summary in 4-6 sentences suitable for barangay officials. Focus on:
-1. Overall activity level and key metrics
-2. Request distribution patterns
-3. Processing efficiency and success rate
-4. Notable trends or concerns
-
-Data for ${summaryData.monthName} ${summaryData.year}:
-
-**Overall Performance:**
-- Total Requests: ${summaryData.summary.totalRequests}
-- Success Rate: ${summaryData.summary.successRate}%
-- Average Processing Time: ${summaryData.summary.avgProcessingTime} hours
-- Peak Day: ${summaryData.summary.peakDay} (${
-        summaryData.summary.peakDayCount
-      } requests)
-
-**Request Status:**
-- Pending: ${summaryData.summary.pendingCount}
-- Processing: ${summaryData.summary.processingCount}
-- Approved: ${summaryData.summary.approvedCount}
-- Rejected: ${summaryData.summary.rejectedCount}
-- Cancelled: ${summaryData.summary.cancelledCount}
-
-**Request Types:**
-${summaryData.requestTypeStats
-  .map((rt: any) => `- ${rt.typeName}: ${rt.count} requests`)
-  .join("\n")}
-
-**Verification Stats:**
-- Total Residents: ${summaryData.verificationStats.total}
-- Verified: ${summaryData.verificationStats.verified} (${
-        summaryData.verificationStats.verificationRate
-      }%)
-- Unverified: ${summaryData.verificationStats.unverified}
-
-**Processing Times by Type:**
-${summaryData.processingTimeStats
-  .map(
-    (pt: any) =>
-      `- ${pt.typeName}: ${pt.avgProcessingTime} hours average (${pt.completedCount} completed)`
-  )
-  .join("\n")}
-
-Provide a professional, actionable summary using non-technical language appropriate for government officials.`;
-
-      const response = await fetch(
-        "https://router.huggingface.co/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_AI_API_TOKEN}`,
-          },
-          body: JSON.stringify({
-            model: "deepseek-ai/DeepSeek-V3.2",
-            max_tokens: 1024,
-            messages: [
-              {
-                role: "user",
-                content: prompt,
-              },
-            ],
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+    mutationFn: getSummaryAI,
+    onSuccess: (response) => {
+      if (response.isSuccess) {
+        setAiSummary(response.summary);
+        toast.success("AI summary generated successfully!");
+      } else {
+        toast.error(response.error || "Failed to generate summary");
       }
-
-      const result = await response.json();
-      const summaryText = result.choices[0].message.content;
-      console.log(result, result.choices[0]);
-
-      return summaryText;
-    },
-    onSuccess: (summary) => {
-      setAiSummary(summary);
-      toast.success("AI summary generated successfully!");
     },
     onError: (error) => {
       console.error("Error generating summary:", error);
@@ -160,7 +81,6 @@ Provide a professional, actionable summary using non-technical language appropri
     },
   });
 
-  // Colors
   const TYPE_COLORS = ["#3b82f6", "#10b981", "#f59e0b"];
   const STATUS_COLORS = {
     pending: "#f59e0b",
@@ -170,11 +90,9 @@ Provide a professional, actionable summary using non-technical language appropri
     cancelled: "#6b7280",
   };
 
-  // Generate year options (last 5 years + current year)
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
 
-  // Month options
   const months = [
     { value: 1, label: "January" },
     { value: 2, label: "February" },
@@ -192,7 +110,11 @@ Provide a professional, actionable summary using non-technical language appropri
 
   const handleExport = () => {
     if (data?.data) {
-      const jsonString = JSON.stringify(data.data, null, 2);
+      const exportData = {
+        ...data.data,
+        aiSummary: aiSummary || null,
+      };
+      const jsonString = JSON.stringify(exportData, null, 2);
       const blob = new Blob([jsonString], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -209,12 +131,17 @@ Provide a professional, actionable summary using non-technical language appropri
     }
   };
 
+  // Reset AI summary when filters change
+  React.useEffect(() => {
+    setAiSummary("");
+  }, [selectedYear, selectedMonth]);
+
   if (isLoading) {
     return (
       <Container>
         <TitlePage title="Monthly Summary Report" hasBack />
         <div className="flex items-center justify-center h-64">
-          <p className="text-gray-500">Loading summary...</p>
+          <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
         </div>
       </Container>
     );
@@ -224,8 +151,6 @@ Provide a professional, actionable summary using non-technical language appropri
     return (
       <Container>
         <TitlePage title="Monthly Summary Report" hasBack />
-
-        {/* Filters */}
         <Card className="mb-6">
           <CardContent className="pt-6">
             <div className="flex flex-col sm:flex-row gap-4 items-end">
@@ -247,7 +172,6 @@ Provide a professional, actionable summary using non-technical language appropri
                   </SelectContent>
                 </Select>
               </div>
-
               <div className="flex-1 sm:flex-none">
                 <label className="text-sm font-medium mb-2 block">Month</label>
                 <Select
@@ -272,7 +196,6 @@ Provide a professional, actionable summary using non-technical language appropri
             </div>
           </CardContent>
         </Card>
-
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
@@ -300,6 +223,7 @@ Provide a professional, actionable summary using non-technical language appropri
             variant="default"
             size="sm"
             disabled={summaryMutation.isPending}
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
           >
             {summaryMutation.isPending ? (
               <>
@@ -315,7 +239,7 @@ Provide a professional, actionable summary using non-technical language appropri
           </Button>
           <Button onClick={handleExport} variant="outline" size="sm">
             <Download className="w-4 h-4 mr-2" />
-            Export Data
+            Export
           </Button>
         </div>
       </div>
@@ -342,7 +266,6 @@ Provide a professional, actionable summary using non-technical language appropri
                 </SelectContent>
               </Select>
             </div>
-
             <div className="flex-1 sm:flex-none">
               <label className="text-sm font-medium mb-2 block">Month</label>
               <Select
@@ -364,7 +287,6 @@ Provide a professional, actionable summary using non-technical language appropri
                 </SelectContent>
               </Select>
             </div>
-
             <div className="flex-1">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Calendar className="w-4 h-4" />

@@ -131,3 +131,8 @@ export const getPrivilages = async (params: any): Promise<any> => {
 export const updatePrivilages = async (params: any): Promise<any> => {
   return await post("/api/privilage/updatePrivileges", params);
 };
+
+//ai
+export const getSummaryAI = async (params: any): Promise<any> => {
+  return await post("/api/ai/aiSummary", params);
+};
