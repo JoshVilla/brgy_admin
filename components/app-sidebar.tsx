@@ -39,19 +39,67 @@ import {
   GitGraph,
   Megaphone,
   MessageSquareWarning,
+  Scale,
   ShieldUser,
   Users2,
   Wrench,
 } from "lucide-react";
 import Image from "next/image";
+import { useQuery } from "@tanstack/react-query";
+import { getPrivilages } from "@/services/api";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { IResAdmin } from "@/utils/types";
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  onItemClick?: () => void;
+}
+
+// Map navigation items to their privilege keys
+const privilegeKeyMap: Record<string, keyof IPrivilege> = {
+  Dashboard: "dashboard",
+  "Resident Management": "resident",
+  Announcements: "announcement",
+  Events: "event",
+  Requests: "request",
+  Blotters: "blotter",
+  Analytics: "analytic",
+  Legislatives: "legislative",
+  Admins: "admin",
+  "Brgy Officials": "official",
+  Settings: "setting",
+};
+
+interface IPrivilege {
+  _id: string;
+  adminId: string;
+  dashboard: number;
+  resident: number;
+  announcement: number;
+  event: number;
+  request: number;
+  blotter: number;
+  analytic: number;
+  legislative: number;
+  admin: number;
+  official: number;
+  setting: number;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
+  const adminInfo = useSelector(
+    (state: RootState) => state.admin.adminInfo as IResAdmin
+  );
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["menu", adminInfo._id],
+    queryFn: () => getPrivilages({ adminId: adminInfo._id }),
+  });
+
+  const navItems = [
     {
       title: "Dashboard",
       url: "/admin/dashboard",
@@ -88,8 +136,18 @@ const data = {
       icon: ChartGantt,
     },
     {
+      title: "Legislatives",
+      url: "/admin/legislatives/",
+      icon: Scale,
+    },
+    {
       title: "Admins",
       url: "/admin/admins/",
+      icon: ShieldUser,
+    },
+    {
+      title: "Brgy Officials",
+      url: "/admin/officials/",
       icon: ShieldUser,
     },
     {
@@ -97,96 +155,147 @@ const data = {
       url: "/admin/settings/",
       icon: Wrench,
     },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: IconCamera,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: IconFileDescription,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: IconFileAi,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: IconSettings,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: IconHelp,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: IconSearch,
-    },
-  ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: IconDatabase,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: IconReport,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: IconFileWord,
-    },
-  ],
-};
+  ];
 
-interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  onItemClick?: () => void;
-}
+  // Filter nav items based on privileges
+  const filteredNavItems = React.useMemo(() => {
+    if (!data?.data) return [];
 
-export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
+    const privileges = data.data as IPrivilege;
+
+    return navItems.filter((item) => {
+      const privilegeKey = privilegeKeyMap[item.title];
+      if (!privilegeKey) return false;
+      return privileges[privilegeKey] === 1;
+    });
+  }, [data]);
+
+  const dataMenu = {
+    user: {
+      name: "shadcn",
+      email: "m@example.com",
+      avatar: "/avatars/shadcn.jpg",
+    },
+    navMain: filteredNavItems,
+    navClouds: [
+      {
+        title: "Capture",
+        icon: IconCamera,
+        isActive: true,
+        url: "#",
+        items: [
+          {
+            title: "Active Proposals",
+            url: "#",
+          },
+          {
+            title: "Archived",
+            url: "#",
+          },
+        ],
+      },
+      {
+        title: "Proposal",
+        icon: IconFileDescription,
+        url: "#",
+        items: [
+          {
+            title: "Active Proposals",
+            url: "#",
+          },
+          {
+            title: "Archived",
+            url: "#",
+          },
+        ],
+      },
+      {
+        title: "Prompts",
+        icon: IconFileAi,
+        url: "#",
+        items: [
+          {
+            title: "Active Proposals",
+            url: "#",
+          },
+          {
+            title: "Archived",
+            url: "#",
+          },
+        ],
+      },
+    ],
+    navSecondary: [
+      {
+        title: "Settings",
+        url: "#",
+        icon: IconSettings,
+      },
+      {
+        title: "Get Help",
+        url: "#",
+        icon: IconHelp,
+      },
+      {
+        title: "Search",
+        url: "#",
+        icon: IconSearch,
+      },
+    ],
+    documents: [
+      {
+        name: "Data Library",
+        url: "#",
+        icon: IconDatabase,
+      },
+      {
+        name: "Reports",
+        url: "#",
+        icon: IconReport,
+      },
+      {
+        name: "Word Assistant",
+        url: "#",
+        icon: IconFileWord,
+      },
+    ],
+  };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <Sidebar collapsible="offcanvas" {...props}>
+        <SidebarHeader>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <a href="#" onClick={onItemClick}>
+                  <Image
+                    alt="brgy logo"
+                    src={"/logo/laurel_logo.png"}
+                    width={30}
+                    height={30}
+                  />
+                  <span className="text-base font-semibold">
+                    Brgy Laurel Admin
+                  </span>
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarHeader>
+        <SidebarContent>
+          <div className="flex items-center justify-center p-4">
+            <p className="text-sm text-muted-foreground">Loading menu...</p>
+          </div>
+        </SidebarContent>
+        <SidebarFooter>
+          <NavUser user={dataMenu.user} />
+        </SidebarFooter>
+      </Sidebar>
+    );
+  }
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -200,7 +309,6 @@ export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
                   width={30}
                   height={30}
                 />
-
                 <span className="text-base font-semibold">
                   Brgy Laurel Admin
                 </span>
@@ -211,11 +319,11 @@ export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
       </SidebarHeader>
 
       <SidebarContent>
-        <NavMain items={data.navMain} onItemClick={onItemClick} />
+        <NavMain items={dataMenu.navMain} onItemClick={onItemClick} />
       </SidebarContent>
 
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={dataMenu.user} />
       </SidebarFooter>
     </Sidebar>
   );

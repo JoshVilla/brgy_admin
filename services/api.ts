@@ -122,3 +122,12 @@ export const getSettings = async (params: any): Promise<any> => {
 export const updateRequestSettings = async (params: any): Promise<any> => {
   return await post("/api/settings/updateRequest", params);
 };
+
+//privilage
+export const getPrivilages = async (params: any): Promise<any> => {
+  return await post("/api/privilage", params);
+};
+
+export const updatePrivilages = async (params: any): Promise<any> => {
+  return await post("/api/privilage/updatePrivileges", params);
+};

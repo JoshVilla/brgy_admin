@@ -75,7 +75,11 @@ export async function RequestGraphController() {
       {
         $group: {
           _id: {
-            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$createdAt",
+              timezone: "Asia/Manila",
+            },
           },
           count: { $sum: 1 },
         },
@@ -84,7 +88,6 @@ export async function RequestGraphController() {
         $sort: { _id: 1 },
       },
     ]);
-
     // Get average processing time (for completed requests)
     const processingTimeStats = await Request.aggregate([
       {

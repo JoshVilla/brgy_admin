@@ -3,7 +3,7 @@
 import Container from "@/components/container";
 import TitlePage from "@/components/titlePage";
 import { getMonthlySummary } from "@/services/api";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import {
   BarChart,
@@ -47,7 +47,10 @@ import {
   Clock,
   CheckCircle2,
   XCircle,
+  Sparkles,
+  Loader2,
 } from "lucide-react";
+import { toast } from "sonner";
 
 const MonthlySummary = () => {
   // Get last month as initial values
@@ -57,12 +60,104 @@ const MonthlySummary = () => {
     now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
 
   const [selectedYear, setSelectedYear] = useState(lastMonthYear);
-  const [selectedMonth, setSelectedMonth] = useState(lastMonth + 1); // Store as 1-12
+  const [selectedMonth, setSelectedMonth] = useState(lastMonth + 1);
+  const [aiSummary, setAiSummary] = useState("");
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["summary", selectedYear, selectedMonth],
     queryFn: () =>
       getMonthlySummary({ year: selectedYear, month: selectedMonth }),
+  });
+
+  // AI Summary Mutation
+  const summaryMutation = useMutation({
+    mutationFn: async (summaryData: any) => {
+      const prompt = `You are an analytics assistant for a Barangay (Filipino local government unit) management system.
+
+Analyze the following monthly report data and provide a clear, professional executive summary in 4-6 sentences suitable for barangay officials. Focus on:
+1. Overall activity level and key metrics
+2. Request distribution patterns
+3. Processing efficiency and success rate
+4. Notable trends or concerns
+
+Data for ${summaryData.monthName} ${summaryData.year}:
+
+**Overall Performance:**
+- Total Requests: ${summaryData.summary.totalRequests}
+- Success Rate: ${summaryData.summary.successRate}%
+- Average Processing Time: ${summaryData.summary.avgProcessingTime} hours
+- Peak Day: ${summaryData.summary.peakDay} (${
+        summaryData.summary.peakDayCount
+      } requests)
+
+**Request Status:**
+- Pending: ${summaryData.summary.pendingCount}
+- Processing: ${summaryData.summary.processingCount}
+- Approved: ${summaryData.summary.approvedCount}
+- Rejected: ${summaryData.summary.rejectedCount}
+- Cancelled: ${summaryData.summary.cancelledCount}
+
+**Request Types:**
+${summaryData.requestTypeStats
+  .map((rt: any) => `- ${rt.typeName}: ${rt.count} requests`)
+  .join("\n")}
+
+**Verification Stats:**
+- Total Residents: ${summaryData.verificationStats.total}
+- Verified: ${summaryData.verificationStats.verified} (${
+        summaryData.verificationStats.verificationRate
+      }%)
+- Unverified: ${summaryData.verificationStats.unverified}
+
+**Processing Times by Type:**
+${summaryData.processingTimeStats
+  .map(
+    (pt: any) =>
+      `- ${pt.typeName}: ${pt.avgProcessingTime} hours average (${pt.completedCount} completed)`
+  )
+  .join("\n")}
+
+Provide a professional, actionable summary using non-technical language appropriate for government officials.`;
+
+      const response = await fetch(
+        "https://router.huggingface.co/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_AI_API_TOKEN}`,
+          },
+          body: JSON.stringify({
+            model: "deepseek-ai/DeepSeek-V3.2",
+            max_tokens: 1024,
+            messages: [
+              {
+                role: "user",
+                content: prompt,
+              },
+            ],
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      const summaryText = result.choices[0].message.content;
+      console.log(result, result.choices[0]);
+
+      return summaryText;
+    },
+    onSuccess: (summary) => {
+      setAiSummary(summary);
+      toast.success("AI summary generated successfully!");
+    },
+    onError: (error) => {
+      console.error("Error generating summary:", error);
+      toast.error("Failed to generate AI summary. Please try again.");
+    },
   });
 
   // Colors
@@ -105,6 +200,12 @@ const MonthlySummary = () => {
       link.download = `monthly-summary-${selectedYear}-${selectedMonth}.json`;
       link.click();
       URL.revokeObjectURL(url);
+    }
+  };
+
+  const handleGenerateSummary = () => {
+    if (data?.data) {
+      summaryMutation.mutate(data.data);
     }
   };
 
@@ -193,10 +294,30 @@ const MonthlySummary = () => {
     <Container>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <TitlePage title="Monthly Summary Report" hasBack />
-        <Button onClick={handleExport} variant="outline" size="sm">
-          <Download className="w-4 h-4 mr-2" />
-          Export Data
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={handleGenerateSummary}
+            variant="default"
+            size="sm"
+            disabled={summaryMutation.isPending}
+          >
+            {summaryMutation.isPending ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-4 h-4 mr-2" />
+                AI Summary
+              </>
+            )}
+          </Button>
+          <Button onClick={handleExport} variant="outline" size="sm">
+            <Download className="w-4 h-4 mr-2" />
+            Export Data
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -255,6 +376,23 @@ const MonthlySummary = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* AI Summary Card */}
+      {aiSummary && (
+        <Card className="mb-6 border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/50 to-purple-50/50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-indigo-600" />
+              AI-Generated Executive Summary
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+              {aiSummary}
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="space-y-6">
         {/* Key Metrics Cards */}
@@ -536,43 +674,6 @@ const MonthlySummary = () => {
             </CardContent>
           </Card>
         </div>
-
-        {/* Verification Stats */}
-        {/* <Card>
-          <CardHeader>
-            <CardTitle>Verification Statistics</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Verified</p>
-                <p className="text-2xl font-bold text-purple-600">
-                  {summary.verificationStats.verified}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Unverified</p>
-                <p className="text-2xl font-bold text-gray-600">
-                  {summary.verificationStats.unverified}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Total</p>
-                <p className="text-2xl font-bold">
-                  {summary.verificationStats.total}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  Verification Rate
-                </p>
-                <p className="text-2xl font-bold text-purple-600">
-                  {summary.verificationStats.verificationRate}%
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card> */}
 
         {/* Data Tables */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

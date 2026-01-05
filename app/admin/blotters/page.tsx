@@ -196,7 +196,7 @@ const Page = () => {
 
         {/* Filters */}
         <SearchForm searchProps={searchProps} onSearch={handleSearch} />
-        <div>
+        <div className="hidden md:block">
           <Table>
             <TableHeader>
               <TableRow>
@@ -207,6 +207,93 @@ const Page = () => {
             </TableHeader>
             <TableBody>{renderTableRows()}</TableBody>
           </Table>
+        </div>
+
+        {/* Mobile Card View - Hidden on desktop */}
+        <div className="md:hidden space-y-4">
+          {isLoading ? (
+            <div className="text-center py-10 text-gray-500">Loading...</div>
+          ) : blotterData.length === 0 ? (
+            <div className="text-center py-10 text-gray-500">No data</div>
+          ) : (
+            blotterData.map((blotter: Blotter) => (
+              <Card key={blotter._id} className="overflow-hidden">
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <p className="text-xs text-muted-foreground">
+                        Blotter No.
+                      </p>
+                      <p className="font-semibold">{blotter.blotterNo}</p>
+                    </div>
+                    <Badge variant={getStatusVariant(blotter.status)}>
+                      {blotter.status}
+                    </Badge>
+                  </div>
+
+                  <div className="space-y-2 mb-4">
+                    <div>
+                      <p className="text-xs text-muted-foreground">
+                        Complainant
+                      </p>
+                      <p className="text-sm">{blotter.complainantName}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">
+                        Respondent
+                      </p>
+                      <p className="text-sm">{blotter.respondentName}</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <p className="text-xs text-muted-foreground">
+                          Incident Type
+                        </p>
+                        <p className="text-sm">{blotter.incidentType}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">
+                          Incident Date
+                        </p>
+                        <p className="text-sm">
+                          {formatDate(blotter.incidentDate)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2 pt-3 border-t">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() =>
+                        router.push(
+                          `/admin/blotters/viewBlotter/${blotter._id}`
+                        )
+                      }
+                    >
+                      <EyeIcon className="mr-2 h-4 w-4" />
+                      View
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() =>
+                        router.push(
+                          `/admin/blotters/editBlotter/${blotter._id}`
+                        )
+                      }
+                    >
+                      <Pencil className="mr-2 h-4 w-4" />
+                      Edit
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
         </div>
 
         {blotterData.length > 0 && (

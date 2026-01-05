@@ -69,13 +69,17 @@ export const getDecodedToken = (): JwtPayload | null => {
 
 export const formattedDate = (dateString?: string): string => {
   if (!dateString) return "N/A";
+
   const date = new Date(dateString);
+
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "long",
     day: "numeric",
+    timeZone: "Asia/Manila",
   };
-  return date.toLocaleDateString("en-US", options);
+
+  return date.toLocaleDateString("en-PH", options);
 };
 
 export function formatDateTime(rawDate: string | Date): string {

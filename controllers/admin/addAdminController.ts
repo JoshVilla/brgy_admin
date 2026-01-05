@@ -1,5 +1,6 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import Admin, { IAdmin } from "@/models/adminModel";
+import Privilage from "@/models/privilageModel";
 import { hashPassword } from "@/utils/asyncHelpers";
 
 export async function AddAdminController(params: IAdmin) {
@@ -25,6 +26,11 @@ export async function AddAdminController(params: IAdmin) {
       username,
       password: hashedPassword,
       isSuperAdmin,
+    });
+
+    // create privilage
+    await Privilage.create({
+      adminId: newAdmin._id,
     });
 
     return {
