@@ -140,30 +140,68 @@ export async function CreateMonthlySummaryController() {
       },
     ]);
 
-    // Format request type stats
-    const formattedRequestStats = [
+    // Certificate type mapping
+    const certificateTypes = [
       {
         type: REQUEST_TYPE.BRGYCLEARANCE,
-        typeName: "Barangay Certificate",
-        count:
-          requestStats.find((s) => s._id === REQUEST_TYPE.BRGYCLEARANCE)
-            ?.count || 0,
+        typeName: "Barangay Clearance",
       },
       {
         type: REQUEST_TYPE.BRGYINDIGENCY,
-        typeName: "Barangay Indigency",
-        count:
-          requestStats.find((s) => s._id === REQUEST_TYPE.BRGYINDIGENCY)
-            ?.count || 0,
+        typeName: "Certificate of Indigency",
       },
       {
         type: REQUEST_TYPE.BRGYCEDULA,
-        typeName: "Barangay Cedula",
-        count:
-          requestStats.find((s) => s._id === REQUEST_TYPE.BRGYCEDULA)?.count ||
-          0,
+        typeName: "Community Tax Certificate (Cedula)",
+      },
+      {
+        type: REQUEST_TYPE.BRGYRESIDENCY,
+        typeName: "Certificate of Residency",
+      },
+      {
+        type: REQUEST_TYPE.BRGYBUSINESSCLEARANCE,
+        typeName: "Business Clearance",
+      },
+      {
+        type: REQUEST_TYPE.BRGYGOODMORAL,
+        typeName: "Good Moral Certificate",
+      },
+      {
+        type: REQUEST_TYPE.BRGYNOINCOME,
+        typeName: "Certificate of No Income",
+      },
+      {
+        type: REQUEST_TYPE.BRGYSOLOPARENT,
+        typeName: "Solo Parent Certificate",
+      },
+      {
+        type: REQUEST_TYPE.BRGYSENIORCITIZEN,
+        typeName: "Senior Citizen Certificate",
+      },
+      {
+        type: REQUEST_TYPE.BRGYPWD,
+        typeName: "PWD Certificate",
+      },
+      {
+        type: REQUEST_TYPE.BRGYID,
+        typeName: "Barangay ID",
+      },
+      {
+        type: REQUEST_TYPE.BRGYTRAVELCERT,
+        typeName: "Travel Certificate",
+      },
+      {
+        type: REQUEST_TYPE.BRGYEVENTPERMIT,
+        typeName: "Event Permit",
       },
     ];
+
+    // Format request type stats
+    const formattedRequestStats = certificateTypes.map((cert) => ({
+      type: cert.type,
+      typeName: cert.typeName,
+      count: requestStats.find((s) => s._id === cert.type)?.count || 0,
+    }));
 
     // Format status stats
     const formattedStatusStats = [
@@ -179,46 +217,15 @@ export async function CreateMonthlySummaryController() {
     }));
 
     // Format processing time stats
-    const formattedProcessingTime = [
-      {
-        type: REQUEST_TYPE.BRGYCLEARANCE,
-        typeName: "Barangay Certificate",
-        avgProcessingTime:
-          Math.round(
-            (processingTimeStats.find(
-              (s) => s._id === REQUEST_TYPE.BRGYCLEARANCE
-            )?.avgProcessingTime || 0) * 10
-          ) / 10,
-        completedCount:
-          processingTimeStats.find((s) => s._id === REQUEST_TYPE.BRGYCLEARANCE)
-            ?.count || 0,
-      },
-      {
-        type: REQUEST_TYPE.BRGYINDIGENCY,
-        typeName: "Barangay Indigency",
-        avgProcessingTime:
-          Math.round(
-            (processingTimeStats.find(
-              (s) => s._id === REQUEST_TYPE.BRGYINDIGENCY
-            )?.avgProcessingTime || 0) * 10
-          ) / 10,
-        completedCount:
-          processingTimeStats.find((s) => s._id === REQUEST_TYPE.BRGYINDIGENCY)
-            ?.count || 0,
-      },
-      {
-        type: REQUEST_TYPE.BRGYCEDULA,
-        typeName: "Barangay Cedula",
-        avgProcessingTime:
-          Math.round(
-            (processingTimeStats.find((s) => s._id === REQUEST_TYPE.BRGYCEDULA)
-              ?.avgProcessingTime || 0) * 10
-          ) / 10,
-        completedCount:
-          processingTimeStats.find((s) => s._id === REQUEST_TYPE.BRGYCEDULA)
-            ?.count || 0,
-      },
-    ];
+    const formattedProcessingTime = certificateTypes.map((cert) => {
+      const stat = processingTimeStats.find((s) => s._id === cert.type);
+      return {
+        type: cert.type,
+        typeName: cert.typeName,
+        avgProcessingTime: Math.round((stat?.avgProcessingTime || 0) * 10) / 10,
+        completedCount: stat?.count || 0,
+      };
+    });
 
     // Format verification stats
     const verifiedCount =

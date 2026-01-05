@@ -81,7 +81,23 @@ const MonthlySummary = () => {
     },
   });
 
-  const TYPE_COLORS = ["#3b82f6", "#10b981", "#f59e0b"];
+  // Expanded color palette for all 13 certificate types
+  const TYPE_COLORS = [
+    "#3b82f6", // Blue - Barangay Clearance
+    "#10b981", // Green - Certificate of Indigency
+    "#f59e0b", // Amber - Cedula
+    "#ef4444", // Red - Certificate of Residency
+    "#8b5cf6", // Violet - Business Clearance
+    "#ec4899", // Pink - Good Moral
+    "#06b6d4", // Cyan - No Income
+    "#84cc16", // Lime - Solo Parent
+    "#f97316", // Orange - Senior Citizen
+    "#6366f1", // Indigo - PWD
+    "#14b8a6", // Teal - Barangay ID
+    "#a855f7", // Purple - Travel Certificate
+    "#f43f5e", // Rose - Event Permit
+  ];
+
   const STATUS_COLORS = {
     pending: "#f59e0b",
     processing: "#2f82d6",
@@ -458,28 +474,35 @@ const MonthlySummary = () => {
 
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Request Type Bar Chart */}
+          {/* Certificate Types Bar Chart - Increased Height */}
           <Card>
             <CardHeader>
-              <CardTitle>Request Types Distribution</CardTitle>
+              <CardTitle>Certificate Types Distribution</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={summary.requestTypeStats}>
+              <ResponsiveContainer width="100%" height={450}>
+                <BarChart
+                  data={summary.requestTypeStats}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 120 }}
+                >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="typeName"
                     angle={-45}
                     textAnchor="end"
-                    height={80}
-                    fontSize={11}
+                    height={120}
+                    fontSize={10}
+                    interval={0}
                   />
                   <YAxis allowDecimals={false} fontSize={11} />
                   <Tooltip />
                   <Bar dataKey="count" name="Requests" radius={[8, 8, 0, 0]}>
                     {summary.requestTypeStats.map(
                       (entry: any, index: number) => (
-                        <Cell key={`cell-${index}`} fill={TYPE_COLORS[index]} />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={TYPE_COLORS[index % TYPE_COLORS.length]}
+                        />
                       )
                     )}
                   </Bar>
@@ -494,7 +517,7 @@ const MonthlySummary = () => {
               <CardTitle>Status Distribution</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={450}>
                 <PieChart>
                   <Pie
                     data={summary.statusStats.filter((s: any) => s.count > 0)}
@@ -502,7 +525,7 @@ const MonthlySummary = () => {
                     cy="50%"
                     labelLine={false}
                     label={({ statusName, count }) => `${statusName}: ${count}`}
-                    outerRadius={80}
+                    outerRadius={120}
                     fill="#8884d8"
                     dataKey="count"
                   >
@@ -529,7 +552,7 @@ const MonthlySummary = () => {
               <CardTitle>Daily Request Trend</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={350}>
                 <AreaChart data={summary.dailyStats}>
                   <defs>
                     <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
@@ -565,21 +588,25 @@ const MonthlySummary = () => {
             </CardContent>
           </Card>
 
-          {/* Processing Time */}
+          {/* Processing Time by Certificate Type */}
           <Card>
             <CardHeader>
-              <CardTitle>Processing Time by Type</CardTitle>
+              <CardTitle>Processing Time by Certificate Type</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={summary.processingTimeStats}>
+              <ResponsiveContainer width="100%" height={350}>
+                <BarChart
+                  data={summary.processingTimeStats}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 100 }}
+                >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="typeName"
                     angle={-45}
                     textAnchor="end"
-                    height={80}
-                    fontSize={11}
+                    height={100}
+                    fontSize={10}
+                    interval={0}
                   />
                   <YAxis fontSize={11} />
                   <Tooltip
@@ -599,46 +626,55 @@ const MonthlySummary = () => {
 
         {/* Data Tables */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Request Types Table */}
+          {/* Certificate Types Table - Scrollable */}
           <Card>
             <CardHeader>
-              <CardTitle>Request Types Breakdown</CardTitle>
+              <CardTitle>Certificate Types Breakdown</CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Type</TableHead>
-                    <TableHead className="text-right">Count</TableHead>
-                    <TableHead className="text-right">Percentage</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {summary.requestTypeStats.map((stat: any, index: number) => (
-                    <TableRow key={stat.type}>
-                      <TableCell className="font-medium">
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="w-3 h-3 rounded-full"
-                            style={{ backgroundColor: TYPE_COLORS[index] }}
-                          />
-                          {stat.typeName}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">{stat.count}</TableCell>
-                      <TableCell className="text-right">
-                        {summary.summary.totalRequests > 0
-                          ? (
-                              (stat.count / summary.summary.totalRequests) *
-                              100
-                            ).toFixed(1)
-                          : 0}
-                        %
-                      </TableCell>
+              <div className="max-h-[500px] overflow-y-auto">
+                <Table>
+                  <TableHeader className="sticky top-0 bg-white z-10">
+                    <TableRow>
+                      <TableHead>Certificate Type</TableHead>
+                      <TableHead className="text-right">Count</TableHead>
+                      <TableHead className="text-right">Percentage</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {summary.requestTypeStats.map(
+                      (stat: any, index: number) => (
+                        <TableRow key={stat.type}>
+                          <TableCell className="font-medium">
+                            <div className="flex items-center gap-2">
+                              <div
+                                className="w-3 h-3 rounded-full flex-shrink-0"
+                                style={{
+                                  backgroundColor:
+                                    TYPE_COLORS[index % TYPE_COLORS.length],
+                                }}
+                              />
+                              <span className="text-sm">{stat.typeName}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {stat.count}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {summary.summary.totalRequests > 0
+                              ? (
+                                  (stat.count / summary.summary.totalRequests) *
+                                  100
+                                ).toFixed(1)
+                              : 0}
+                            %
+                          </TableCell>
+                        </TableRow>
+                      )
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
 
@@ -691,36 +727,42 @@ const MonthlySummary = () => {
           </Card>
         </div>
 
-        {/* Processing Time Details Table */}
+        {/* Processing Time Details Table - Scrollable */}
         <Card>
           <CardHeader>
-            <CardTitle>Processing Time Details</CardTitle>
+            <CardTitle>Processing Time Details by Certificate Type</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Request Type</TableHead>
-                  <TableHead className="text-right">Completed Count</TableHead>
-                  <TableHead className="text-right">Avg Time (Hours)</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {summary.processingTimeStats.map((stat: any) => (
-                  <TableRow key={stat.type}>
-                    <TableCell className="font-medium">
-                      {stat.typeName}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {stat.completedCount}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {stat.avgProcessingTime}
-                    </TableCell>
+            <div className="max-h-[500px] overflow-y-auto">
+              <Table>
+                <TableHeader className="sticky top-0 bg-white z-10">
+                  <TableRow>
+                    <TableHead>Certificate Type</TableHead>
+                    <TableHead className="text-right">
+                      Completed Count
+                    </TableHead>
+                    <TableHead className="text-right">
+                      Avg Time (Hours)
+                    </TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {summary.processingTimeStats.map((stat: any) => (
+                    <TableRow key={stat.type}>
+                      <TableCell className="font-medium">
+                        {stat.typeName}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {stat.completedCount}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {stat.avgProcessingTime}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       </div>
