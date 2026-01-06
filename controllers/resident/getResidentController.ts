@@ -58,23 +58,53 @@ export async function ResidentController({
 }) {
   await connectToDatabase();
 
-  const skip = (page - 1) * limit;
-
   const query: Record<string, any> = {};
+
   if (filters._id) query._id = filters._id;
   if (filters.gender) query.gender = filters.gender;
   if (filters.purok) query.purok = filters.purok;
-  if (filters.firstname) query.firstname = filters.firstname;
-  if (filters.middlename) query.middlename = filters.middlename;
-  if (filters.lastname) query.lastname = filters.lastname;
 
-  const residents = await Resident.find(query)
-    .skip(skip)
-    .limit(limit)
-    .sort({ createdAt: -1 })
-    .lean();
+  // Single name search - ALL words must match (each word in any field)
+  if (filters.name) {
+    const nameWords = filters.name.trim().split(/\s+/);
 
-  const total = await Resident.countDocuments(query);
+    // Each word must appear in at least one name field
+    query.$and = nameWords.map((word: string) => {
+      const wordRegex = new RegExp(word, "i");
+      return {
+        $or: [
+          { firstname: wordRegex },
+          { middlename: wordRegex },
+          { lastname: wordRegex },
+        ],
+      };
+    });
+  }
+
+  // Use aggregation to ensure unique results
+  const pipeline: any[] = [
+    { $match: query },
+    { $sort: { createdAt: -1 } },
+    // Group by _id to ensure uniqueness
+    {
+      $group: {
+        _id: "$_id",
+        doc: { $first: "$$ROOT" },
+      },
+    },
+    { $replaceRoot: { newRoot: "$doc" } },
+    { $sort: { createdAt: -1 } },
+  ];
+
+  // Get total unique count
+  const countPipeline = [...pipeline, { $count: "total" }];
+  const countResult = await Resident.aggregate(countPipeline);
+  const total = countResult[0]?.total || 0;
+
+  // Add pagination
+  pipeline.push({ $skip: (page - 1) * limit }, { $limit: limit });
+
+  const residents = await Resident.aggregate(pipeline);
 
   //@ts-ignore
   const newResidents = addAgeToResidents(residents);

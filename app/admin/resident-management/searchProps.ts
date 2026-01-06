@@ -1,20 +1,8 @@
 export const searchProps: any = [
   {
-    label: "Firstname",
-    name: "firstname",
+    label: "Name",
+    name: "name",
     type: "input",
-    placeholder: "Enter Firstname",
-  },
-  {
-    label: "Middlename",
-    name: "middlename",
-    type: "input",
-    placeholder: "Enter Middlename",
-  },
-  {
-    label: "Lastname",
-    name: "lastname",
-    type: "input",
-    placeholder: "Enter Lastname",
+    placeholder: "Enter Name",
   },
 ];
