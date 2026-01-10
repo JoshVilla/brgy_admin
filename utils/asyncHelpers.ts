@@ -56,15 +56,25 @@ export const comparePassword = async (
 export async function uploadImageToCloudinary(file: File): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer());
 
+  // Determine resource type based on file type
+  const isPdf = file.type === "application/pdf";
+  const resourceType = isPdf ? "raw" : "image";
+
   return new Promise<string>((resolve, reject) => {
     cloudinary.v2.uploader
-      .upload_stream({ folder: CLOUD_FOLDER_NAME }, (error, result) => {
-        if (error || !result?.secure_url) {
-          console.error("Cloudinary upload failed:", error);
-          return reject("Failed to upload image");
+      .upload_stream(
+        {
+          folder: CLOUD_FOLDER_NAME,
+          resource_type: resourceType, // Add this!
+        },
+        (error, result) => {
+          if (error || !result?.secure_url) {
+            console.error("Cloudinary upload failed:", error);
+            return reject("Failed to upload image");
+          }
+          resolve(result.secure_url);
         }
-        resolve(result.secure_url);
-      })
+      )
       .end(buffer);
   });
 }

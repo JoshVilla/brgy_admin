@@ -136,3 +136,20 @@ export const updatePrivilages = async (params: any): Promise<any> => {
 export const getSummaryAI = async (params: any): Promise<any> => {
   return await post("/api/ai/aiSummary", params);
 };
+
+//legislative
+export const getLegislative = async (params: any): Promise<any> => {
+  return await post("/api/legislative", params);
+};
+
+export const addLegislative = async (params: any): Promise<any> => {
+  return await post("/api/legislative/addLegislative", params, true);
+};
+
+export const editLegislative = async (params: any): Promise<any> => {
+  return await post("/api/legislative/editLegislative", params, true);
+};
+
+export const deleteLegislative = async (params: any): Promise<any> => {
+  return await post("/api/legislative/deleteLegislative", params);
+};

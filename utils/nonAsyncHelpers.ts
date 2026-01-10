@@ -66,11 +66,10 @@ export const getDecodedToken = (): JwtPayload | null => {
     return null;
   }
 };
-
-export const formattedDate = (dateString?: string): string => {
+export const formattedDate = (dateString?: string | Date): string => {
   if (!dateString) return "N/A";
 
-  const date = new Date(dateString);
+  const date = dateString instanceof Date ? dateString : new Date(dateString);
 
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",

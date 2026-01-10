@@ -1,0 +1,20 @@
+meta {
+  name: get dashboard
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://brgy-admin-olive.vercel.app/api/dashboard
+  body: none
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,6 +1,7 @@
 import { IAdmin } from "@/models/adminModel";
 import { IAnnouncement } from "@/models/announcementModel";
 import { IEvent } from "@/models/eventModel";
+import { ILegislative } from "@/models/legislativeModel";
 import { IRequest } from "@/models/requestModel";
 import { IResident } from "@/models/residentModel";
 
@@ -34,5 +35,9 @@ export interface IResRequest extends IRequest {
 }
 
 export interface IResAdmin extends IAdmin {
+  _id: string;
+}
+
+export interface IResLegislative extends ILegislative {
   _id: string;
 }
