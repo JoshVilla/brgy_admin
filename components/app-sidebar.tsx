@@ -39,6 +39,7 @@ import {
   GitGraph,
   Megaphone,
   MessageSquareWarning,
+  NotebookPen,
   Scale,
   ShieldUser,
   Users2,
@@ -69,6 +70,7 @@ const privilegeKeyMap: Record<string, keyof IPrivilege> = {
   Admins: "admin",
   "Brgy Officials": "official",
   Settings: "setting",
+  "Activity Logs": "activitylog",
 };
 
 interface IPrivilege {
@@ -85,6 +87,7 @@ interface IPrivilege {
   admin: number;
   official: number;
   setting: number;
+  activitylog: number;
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -160,6 +163,11 @@ export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
       url: "/admin/settings/",
       icon: Wrench,
     },
+    {
+      title: "Activity Logs",
+      url: "/admin/activitylogs/",
+      icon: NotebookPen,
+    },
   ];
 
   // Filter nav items based on privileges
@@ -167,12 +175,13 @@ export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
     if (!data?.data) return [];
 
     const privileges = data.data as IPrivilege;
-
-    return navItems.filter((item) => {
+    const priv = navItems.filter((item) => {
       const privilegeKey = privilegeKeyMap[item.title];
+      console.log(privilegeKey);
       if (!privilegeKey) return false;
       return privileges[privilegeKey] === 1;
     });
+    return priv;
   }, [data]);
 
   const dataMenu = {

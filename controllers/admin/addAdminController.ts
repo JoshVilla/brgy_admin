@@ -2,8 +2,12 @@ import { connectToDatabase } from "@/lib/mongodb";
 import Admin, { IAdmin } from "@/models/adminModel";
 import Privilage from "@/models/privilageModel";
 import { hashPassword } from "@/utils/asyncHelpers";
+import { logActivity } from "../activitylog/addActivityLogController";
 
-export async function AddAdminController(params: IAdmin) {
+export async function AddAdminController(
+  params: IAdmin,
+  currentUsername: string
+) {
   try {
     await connectToDatabase();
 
@@ -32,6 +36,13 @@ export async function AddAdminController(params: IAdmin) {
     await Privilage.create({
       adminId: newAdmin._id,
     });
+
+    await logActivity(
+      currentUsername,
+      `Added new admin (${username}, ${isSuperAdmin ? "SuperAdmin" : "Admin"})`,
+      "Add",
+      "Admins"
+    );
 
     return {
       message: "Admin Added Successfully!",

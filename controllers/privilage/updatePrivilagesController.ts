@@ -14,6 +14,7 @@ interface UpdatePrivilegesInput {
   admin?: number;
   official?: number;
   setting?: number;
+  activitylog?: number;
 }
 
 export const UpdatePrivilegesController = async (
@@ -46,6 +47,7 @@ export const UpdatePrivilegesController = async (
         admin: privileges.admin ?? 0,
         official: privileges.official ?? 0,
         setting: privileges.setting ?? 0,
+        activitylog: privileges.activitylog ?? 0,
       },
       { new: true, upsert: true } // Create if doesn't exist
     );

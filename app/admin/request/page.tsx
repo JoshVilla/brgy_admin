@@ -33,11 +33,14 @@ const page = () => {
     setTotalPages,
     handlePageChange,
     setCurrentPage,
+    limit,
+    handleLimitChange,
   } = usePagination();
+
   const [searchParams, setSearchParams] = useState({});
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["request", currentPage, searchParams],
-    queryFn: () => getRequest({ page: currentPage, ...searchParams }),
+    queryKey: ["request", currentPage, searchParams, limit],
+    queryFn: () => getRequest({ page: currentPage, limit, ...searchParams }),
   });
 
   const renderTableRows = () => {
@@ -189,9 +192,11 @@ const page = () => {
 
         {requestData.length > 0 && (
           <PaginationControls
+            limit={limit}
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
+            onLimitChange={handleLimitChange}
           />
         )}
       </div>

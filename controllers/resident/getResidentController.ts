@@ -1,5 +1,6 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import Resident from "@/models/residentModel";
+import { Types } from "mongoose"; // Add this import
 
 // calculate age safely
 const calculateAge = (birthDateStr?: string | Date): number | null => {
@@ -60,7 +61,23 @@ export async function ResidentController({
 
   const query: Record<string, any> = {};
 
-  if (filters._id) query._id = filters._id;
+  // Convert _id string to ObjectId
+  if (filters._id) {
+    try {
+      query._id = new Types.ObjectId(filters._id);
+    } catch (error) {
+      console.error("Invalid ObjectId:", filters._id);
+      return {
+        data: [],
+        total: 0,
+        currentPage: page,
+        totalPages: 0,
+        isSuccess: false,
+        message: "Invalid ID format",
+      };
+    }
+  }
+
   if (filters.gender) query.gender = filters.gender;
   if (filters.purok) query.purok = filters.purok;
 

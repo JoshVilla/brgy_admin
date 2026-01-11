@@ -3,9 +3,10 @@ import { AddAdminController } from "@/controllers/admin/addAdminController";
 
 export async function POST(req: NextRequest) {
   try {
+    const userName = req.headers.get("x-user-name") || "Unknown User";
     const body = await req.json();
 
-    const response = await AddAdminController(body);
+    const response = await AddAdminController(body, userName);
 
     return NextResponse.json(response);
   } catch (error: any) {

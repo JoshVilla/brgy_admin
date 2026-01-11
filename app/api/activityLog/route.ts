@@ -1,18 +1,17 @@
 import { NextResponse, NextRequest } from "next/server";
-import { AddEventController } from "@/controllers/event/addEventController";
+import { GetActivityLogsController } from "@/controllers/activitylog/getActivityLogsContropller";
 
 export async function POST(req: NextRequest) {
   try {
-    const userName = req.headers.get("x-user-name") || "Unknown User";
     const body = await req.json();
-    const response = await AddEventController(body, userName);
+    const response = await GetActivityLogsController(body);
 
     return NextResponse.json(response);
   } catch (error) {
     console.log(error);
     return NextResponse.json({
-      message: "Operation Unsuccessfull",
       isSuccess: false,
+      message: "Cannot fetch activity logs",
     });
   }
 }

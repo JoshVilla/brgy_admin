@@ -176,3 +176,8 @@ export const addOfficial = async (params: any): Promise<any> => {
 export const editOfficial = async (params: any): Promise<any> => {
   return await post("/api/official/editOfficial", params, true);
 };
+
+//activity log
+export const getActivity = async (params: any): Promise<any> => {
+  return await post("/api/activityLog", params);
+};

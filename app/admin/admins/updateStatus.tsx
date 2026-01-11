@@ -43,6 +43,7 @@ interface IPrivilege {
   admin: number;
   official: number;
   setting: number;
+  activitylog: number;
 }
 
 const privilegeOptions = [
@@ -57,6 +58,7 @@ const privilegeOptions = [
   { key: "admin" as keyof IPrivilege, label: "Admins" },
   { key: "official" as keyof IPrivilege, label: "Brgy Officials" },
   { key: "setting" as keyof IPrivilege, label: "Settings" },
+  { key: "activitylog" as keyof IPrivilege, label: "Activity Logs" },
 ];
 
 const EditAdminStatus = ({ id, initialStatus, refetch }: Props) => {
@@ -74,6 +76,7 @@ const EditAdminStatus = ({ id, initialStatus, refetch }: Props) => {
     admin: 0,
     official: 0,
     setting: 0,
+    activitylog: 0,
   });
 
   const adminInfo = useSelector(
@@ -102,6 +105,7 @@ const EditAdminStatus = ({ id, initialStatus, refetch }: Props) => {
         admin,
         official,
         setting,
+        activitylog,
       } = privilegeData.data;
 
       setPrivileges({
@@ -116,6 +120,7 @@ const EditAdminStatus = ({ id, initialStatus, refetch }: Props) => {
         admin,
         official,
         setting,
+        activitylog,
       });
     }
   }, [privilegeData]);
@@ -192,6 +197,7 @@ const EditAdminStatus = ({ id, initialStatus, refetch }: Props) => {
         admin: 1,
         official: 1,
         setting: 1,
+        activitylog: 1,
       };
 
       setPrivileges(allPrivileges);

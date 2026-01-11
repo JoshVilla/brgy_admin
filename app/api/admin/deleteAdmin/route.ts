@@ -3,8 +3,9 @@ import { DeleteAdminController } from "@/controllers/admin/deleteAdminController
 
 export async function POST(req: NextRequest) {
   try {
+    const userName = req.headers.get("x-user-name") || "Unknown User";
     const { id } = await req.json();
-    const response = await DeleteAdminController(id);
+    const response = await DeleteAdminController(id, userName);
 
     return NextResponse.json(response);
   } catch (error) {

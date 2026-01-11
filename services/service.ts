@@ -1,4 +1,5 @@
 import { IApiResponse, IServiceParams } from "@/utils/types";
+import { jwtDecode } from "jwt-decode"; // Install: npm install jwt-decode
 
 export const post = async <T>(
   url: string,
@@ -8,9 +9,22 @@ export const post = async <T>(
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
+  // Decode token to get username
+  let userName = "Unknown User";
+  if (token) {
+    try {
+      const decoded: any = jwtDecode(token);
+      userName =
+        decoded.username || decoded.name || decoded.sub || "Unknown User";
+    } catch (error) {
+      console.error("Error decoding token:", error);
+    }
+  }
+
   const headers: HeadersInit = {
     ...(isFileUpload ? {} : { "Content-Type": "application/json" }),
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    "x-user-name": userName, // Add username from token
   };
 
   const body: string | FormData = isFileUpload

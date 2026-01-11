@@ -13,6 +13,7 @@ export interface IPrivilage {
   admin: number;
   official: number;
   setting: number;
+  activitylog: number;
 }
 
 const PrivilageSchema = new mongoose.Schema<IPrivilage>(
@@ -29,6 +30,7 @@ const PrivilageSchema = new mongoose.Schema<IPrivilage>(
     admin: { type: Number, required: true, default: 0 },
     official: { type: Number, required: true, default: 0 },
     setting: { type: Number, required: true, default: 0 },
+    activitylog: { type: Number, required: true, default: 0 },
   },
   { timestamps: true }
 );

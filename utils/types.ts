@@ -1,3 +1,4 @@
+import { IActivityLog } from "@/models/activityLogModel";
 import { IAdmin } from "@/models/adminModel";
 import { IAnnouncement } from "@/models/announcementModel";
 import { IEvent } from "@/models/eventModel";
@@ -39,5 +40,9 @@ export interface IResAdmin extends IAdmin {
 }
 
 export interface IResLegislative extends ILegislative {
+  _id: string;
+}
+
+export interface IResActivityLog extends IActivityLog {
   _id: string;
 }

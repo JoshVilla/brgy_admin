@@ -3,9 +3,10 @@ import { DeleteEventController } from "@/controllers/event/deleteEventController
 
 export async function POST(req: NextRequest) {
   try {
+    const userName = req.headers.get("x-user-name") || "Unknown User";
     const { id } = await req.json();
 
-    const response = await DeleteEventController(id);
+    const response = await DeleteEventController(id, userName);
 
     return NextResponse.json(response);
   } catch (error) {
