@@ -5,6 +5,7 @@ import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings as SettingsIcon, FileText } from "lucide-react";
 import RequestSettings from "./requestSettings";
+import GeneralSettings from "./generalSettings";
 
 const page = () => {
   return (
@@ -24,11 +25,7 @@ const page = () => {
         </TabsList>
 
         <TabsContent value="general" className="mt-6">
-          <div className="space-y-4">
-            <p className="text-muted-foreground">
-              General settings content here
-            </p>
-          </div>
+          <GeneralSettings />
         </TabsContent>
 
         <TabsContent value="request" className="mt-6">

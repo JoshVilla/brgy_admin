@@ -1,5 +1,6 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import Admin from "@/models/adminModel";
+import Settings from "@/models/settingsModel";
 import { comparePassword } from "@/utils/asyncHelpers";
 import jwt from "jsonwebtoken";
 
@@ -13,6 +14,9 @@ export async function LoginAdminController(params: {
     await connectToDatabase();
 
     const user = await Admin.findOne({ username });
+    const settings = await Settings.findById("SYSTEM_SETTINGS").select(
+      "general"
+    );
 
     if (!user) {
       return {
@@ -40,6 +44,7 @@ export async function LoginAdminController(params: {
         message: "Login Successfully!",
         isSuccess: true,
         data: user,
+        settings: settings.general,
         token,
       };
     } else {

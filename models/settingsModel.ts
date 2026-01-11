@@ -27,6 +27,20 @@ const RequestTypeSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const GeneralSettingsSchema = new mongoose.Schema(
+  {
+    adminLogo: {
+      type: String,
+      default: null,
+    },
+    adminTitle: {
+      type: String,
+      default: null,
+    },
+  },
+  { _id: false }
+);
+
 const SettingsSchema = new mongoose.Schema(
   {
     _id: {
@@ -129,6 +143,13 @@ const SettingsSchema = new mongoose.Schema(
         },
       ],
     },
+    general: {
+      type: GeneralSettingsSchema,
+      default: {
+        adminLogo: null,
+        adminTitle: null,
+      },
+    },
   },
   {
     timestamps: true,
@@ -145,9 +166,15 @@ export interface IRequestType {
   requirements: string[];
 }
 
+export interface IGeneralSettings {
+  adminLogo: string | null;
+  adminTitle: string | null;
+}
+
 export interface ISettings extends mongoose.Document {
   _id: string;
   request: IRequestType[];
+  general: IGeneralSettings;
   createdAt: Date;
   updatedAt: Date;
 }

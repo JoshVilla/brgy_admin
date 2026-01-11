@@ -115,12 +115,22 @@ export const updateBlotter = async (params: any): Promise<any> => {
 };
 
 //settings
+
+//request settings
 export const getSettings = async (params: any): Promise<any> => {
   return await post("/api/settings", params);
 };
 
+export const getGeneralSettings = async (params: any): Promise<any> => {
+  return await post("/api/settings/getGeneralSettings", params);
+};
+
 export const updateRequestSettings = async (params: any): Promise<any> => {
   return await post("/api/settings/updateRequest", params);
+};
+
+export const updateGeneralSettings = async (params: any): Promise<any> => {
+  return await post("/api/settings/updateGeneral", params, true);
 };
 
 //privilage

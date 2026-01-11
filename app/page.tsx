@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { setAdminInfo } from "@/redux/slice/adminSlice";
 import { Loader2, LogIn, Shield } from "lucide-react";
+import { setSettingsInfo } from "@/redux/slice/settingsSlice";
 
 const schema = z.object({
   username: z.string().min(4, "Username must be at least 4 characters"),
@@ -50,6 +51,7 @@ export default function Home() {
       if (data.isSuccess) {
         router.push("/admin/dashboard");
         dispatch(setAdminInfo(data.data));
+        dispatch(setSettingsInfo(data.settings));
         localStorage.setItem("token", data.token);
         toast.success(data.message);
       } else {

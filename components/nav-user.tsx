@@ -29,6 +29,7 @@ import { useRouter } from "next/navigation";
 import { User } from "lucide-react";
 import { IResAdmin } from "@/utils/types"; // Import IResAdmin type
 import { toast } from "sonner";
+import { clearSettings } from "@/redux/slice/settingsSlice";
 
 // Remove TokenInfo as we'll use IResAdmin from Redux
 // type TokenInfo = {
@@ -60,6 +61,7 @@ export function NavUser({
   const handleLogout = async () => {
     try {
       dispatch(clearAdmin());
+      dispatch(clearSettings());
       await persistor.purge();
       await persistor.flush();
       localStorage.removeItem("token");

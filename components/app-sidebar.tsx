@@ -50,6 +50,7 @@ import { getPrivilages } from "@/services/api";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { IResAdmin } from "@/utils/types";
+import { IGeneralSettings } from "@/models/settingsModel";
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   onItemClick?: () => void;
@@ -92,6 +93,10 @@ interface IPrivilege {
 export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
   const adminInfo = useSelector(
     (state: RootState) => state.admin.adminInfo as IResAdmin
+  );
+
+  const settingsInfo = useSelector(
+    (state: RootState) => state.settings.settingsInfo as IGeneralSettings
   );
 
   const { data, isLoading } = useQuery({
@@ -261,6 +266,10 @@ export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
     ],
   };
 
+  // Get logo and title from settings with fallbacks
+  const adminLogo = settingsInfo?.adminLogo || "/logo/laurel_logo.png";
+  const adminTitle = settingsInfo?.adminTitle || "Brgy Laurel Admin";
+
   // Show loading state
   if (isLoading) {
     return (
@@ -270,15 +279,16 @@ export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
                 <a href="#" onClick={onItemClick}>
-                  <Image
-                    alt="brgy logo"
-                    src={"/logo/laurel_logo.png"}
-                    width={30}
-                    height={30}
-                  />
-                  <span className="text-base font-semibold">
-                    Brgy Laurel Admin
-                  </span>
+                  <div className="relative w-[30px] h-[30px] flex-shrink-0">
+                    <Image
+                      alt="brgy logo"
+                      src={adminLogo}
+                      fill
+                      className="object-contain"
+                      sizes="30px"
+                    />
+                  </div>
+                  <span className="text-base font-semibold">{adminTitle}</span>
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -303,15 +313,17 @@ export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
               <a href="#" onClick={onItemClick}>
-                <Image
-                  alt="brgy logo"
-                  src={"/logo/laurel_logo.png"}
-                  width={30}
-                  height={30}
-                />
-                <span className="text-base font-semibold">
-                  Brgy Laurel Admin
-                </span>
+                <div className="relative w-[30px] h-[30px] flex-shrink-0">
+                  <Image
+                    alt="brgy logo"
+                    src={adminLogo}
+                    fill
+                    className="object-contain"
+                    sizes="30px"
+                    priority
+                  />
+                </div>
+                <span className="text-base font-semibold">{adminTitle}</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
