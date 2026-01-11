@@ -163,3 +163,16 @@ export const editLegislative = async (params: any): Promise<any> => {
 export const deleteLegislative = async (params: any): Promise<any> => {
   return await post("/api/legislative/deleteLegislative", params);
 };
+
+//official
+export const getOfficials = async (params: any): Promise<any> => {
+  return await post("/api/official", params);
+};
+
+export const addOfficial = async (params: any): Promise<any> => {
+  return await post("/api/official/addOfficial", params, true);
+};
+
+export const editOfficial = async (params: any): Promise<any> => {
+  return await post("/api/official/editOfficial", params, true);
+};

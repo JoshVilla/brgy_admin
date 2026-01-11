@@ -19,6 +19,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useMutation } from "@tanstack/react-query";
 import { addLegislative } from "@/services/api";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
+import { Plus } from "lucide-react";
 
 const AddLegislativePage = () => {
   const router = useRouter();
@@ -287,10 +289,22 @@ const AddLegislativePage = () => {
 
             {/* Buttons */}
             <div className="flex justify-end gap-4 pt-4">
-              <Button type="submit" disabled={addMutation.isPending}>
-                {addMutation.isPending
-                  ? "Adding..."
-                  : "Add Legislative Document"}
+              <Button
+                type="submit"
+                disabled={addMutation.isPending}
+                className="cursor-pointer"
+              >
+                {addMutation.isPending ? (
+                  <span className="flex items-center gap-2">
+                    <Spinner />
+                    Adding...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <Plus />
+                    Add Legislative Document
+                  </span>
+                )}
               </Button>
               <Button
                 type="button"
