@@ -26,9 +26,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { dataTagErrorSymbol, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { addBlotter } from "@/services/api";
-import { toast } from "sonner";
+import { toastError, toastSuccess } from "@/utils/helpers";
 
 // Form validation schema
 const blotterFormSchema = z.object({
@@ -68,10 +68,10 @@ const Page = () => {
 
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toast.success(data.message);
+        toastSuccess(data.message);
         form.reset();
       } else {
-        toast.error(data.message);
+        toastError(data.message);
       }
     },
 

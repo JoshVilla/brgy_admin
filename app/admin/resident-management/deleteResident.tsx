@@ -14,6 +14,7 @@ import { Trash2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { deleteResident } from "@/services/api";
 import { toast } from "sonner";
+import { toastError, toastSuccess } from "@/utils/helpers";
 
 interface Props {
   id: string;
@@ -27,12 +28,12 @@ const DeleteResident = ({ id, refetch, setCurrentPage }: Props) => {
     mutationFn: deleteResident,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toast.success(data.message);
+        toastSuccess(data.message);
         setCurrentPage(1);
         refetch();
         setOpenDialog(false);
       } else {
-        toast.error(data.message);
+        toastError(data.message);
       }
     },
     onError: (error) => {

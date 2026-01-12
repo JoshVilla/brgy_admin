@@ -19,8 +19,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { addEvent } from "@/services/api";
-import { toast } from "sonner";
 import withAuth from "@/lib/withAuth";
+import { toastError, toastSuccess } from "@/utils/helpers";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -46,10 +46,10 @@ const Page = () => {
     mutationFn: addEvent,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toast.success(data.message);
+        toastSuccess(data.message);
         form.reset();
       } else {
-        toast.error(data.message);
+        toastError(data.message);
       }
     },
   });

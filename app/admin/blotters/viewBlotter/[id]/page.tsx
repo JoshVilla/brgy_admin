@@ -5,7 +5,6 @@ import TitlePage from "@/components/titlePage";
 import { getBlotters } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
-import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -20,7 +19,6 @@ import {
   Clock,
   Loader2,
   Edit,
-  ArrowLeft,
 } from "lucide-react";
 
 interface Blotter {

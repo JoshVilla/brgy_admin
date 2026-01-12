@@ -31,6 +31,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { toastError, toastSuccess } from "@/utils/helpers";
 
 // Form validation schema
 const blotterFormSchema = z.object({
@@ -100,13 +101,13 @@ const Page = () => {
     mutationFn: (formData: BlotterFormValues) =>
       updateBlotter({ blotterId, ...formData }),
     onSuccess: () => {
-      toast.success("Blotter entry updated successfully!");
+      toastSuccess("Blotter entry updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["blotters"] });
       queryClient.invalidateQueries({ queryKey: ["blotter", blotterId] });
       router.push("/admin/blotters");
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to update blotter entry");
+      toastError(error.message || "Failed to update blotter entry");
     },
   });
 

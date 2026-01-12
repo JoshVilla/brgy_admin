@@ -30,6 +30,7 @@ import { User } from "lucide-react";
 import { IResAdmin } from "@/utils/types"; // Import IResAdmin type
 import { toast } from "sonner";
 import { clearSettings } from "@/redux/slice/settingsSlice";
+import { toastError, toastSuccess } from "@/utils/helpers";
 
 // Remove TokenInfo as we'll use IResAdmin from Redux
 // type TokenInfo = {
@@ -66,9 +67,10 @@ export function NavUser({
       await persistor.flush();
       localStorage.removeItem("token");
       router.push("/");
+      toastSuccess("Log out Successfully!");
     } catch (error: any) {
       console.log(error);
-      toast.error(error.message);
+      toastError(error.message);
       // Optional: Add a toast notification for logout error
     }
   };

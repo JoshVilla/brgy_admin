@@ -14,7 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
+
 import {
   updateStatusAdmin,
   getPrivilages,
@@ -24,6 +24,7 @@ import { Pencil } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { IResAdmin } from "@/utils/types";
+import { toastError, toastSuccess, toastWarning } from "@/utils/helpers";
 
 interface Props {
   id: string;
@@ -145,14 +146,14 @@ const EditAdminStatus = ({ id, initialStatus, refetch }: Props) => {
     mutationFn: updateStatusAdmin,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toast.success(data.message);
+        toastSuccess(data.message);
         refetch();
       } else {
-        toast.error(data.message || "Failed to update admin status.");
+        toastError(data.message || "Failed to update admin status.");
       }
     },
     onError: () => {
-      toast.error("Something went wrong. Try again.");
+      toastError("Something went wrong. Try again.");
     },
   });
 
@@ -161,15 +162,15 @@ const EditAdminStatus = ({ id, initialStatus, refetch }: Props) => {
     mutationFn: updatePrivilages,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toast.success("Privileges updated successfully!");
+        toastSuccess("Privileges updated successfully!");
         refetch();
         refetchPrivileges();
       } else {
-        toast.error(data.message || "Failed to update privileges.");
+        toastError(data.message || "Failed to update privileges.");
       }
     },
     onError: () => {
-      toast.error("Something went wrong. Try again.");
+      toastError("Something went wrong. Try again.");
     },
   });
 
@@ -240,7 +241,7 @@ const EditAdminStatus = ({ id, initialStatus, refetch }: Props) => {
 
     // If trying to uncheck and it's the last privilege, prevent it
     if (newValue === 0 && enabledPrivilegesCount === 1) {
-      toast.error("At least one privilege must be enabled");
+      toastWarning("At least one privilege must be enabled");
       return;
     }
 
@@ -253,7 +254,7 @@ const EditAdminStatus = ({ id, initialStatus, refetch }: Props) => {
   const handleSavePrivileges = () => {
     // Validate at least one privilege is enabled
     if (!hasMinimumPrivileges) {
-      toast.error("Please enable at least one privilege");
+      toastWarning("Please enable at least one privilege");
       return;
     }
 

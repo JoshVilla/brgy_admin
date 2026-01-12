@@ -18,9 +18,9 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { useMutation } from "@tanstack/react-query";
 import { addLegislative } from "@/services/api";
-import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 import { Plus } from "lucide-react";
+import { toastError, toastSuccess } from "@/utils/helpers";
 
 const AddLegislativePage = () => {
   const router = useRouter();
@@ -41,15 +41,15 @@ const AddLegislativePage = () => {
     mutationFn: addLegislative,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toast.success(data.message);
+        toastSuccess(data.message);
         router.push("/admin/legislatives");
       } else {
-        toast.error(data.message);
+        toastError(data.message);
       }
     },
     onError: (err: any) => {
       console.log(err);
-      toast.error(err?.message || "An error occurred");
+      toastError(err?.message || "An error occurred");
     },
   });
 
@@ -79,7 +79,7 @@ const AddLegislativePage = () => {
     e.preventDefault();
 
     if (!file) {
-      toast.error("Please upload a document");
+      toastError("Please upload a document");
       return;
     }
 

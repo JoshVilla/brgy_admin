@@ -37,8 +37,8 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { addResident, editResident, getResident } from "@/services/api";
-import { toast } from "sonner";
 import { IResResident } from "@/utils/types";
+import { toastError, toastSuccess } from "@/utils/helpers";
 
 // Zod schema
 const formSchema = z.object({
@@ -108,13 +108,13 @@ const Page = () => {
     mutationFn: editResident,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toast.success(data.message);
+        toastSuccess(data.message);
       } else {
-        toast.error(data.message);
+        toastError(data.message);
       }
     },
     onError: (error: any) => {
-      toast.error(error.message || "An unexpected error occurred.");
+      toastError(error.message || "An unexpected error occurred.");
     },
   });
 

@@ -18,11 +18,11 @@ import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/services/api";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { setAdminInfo } from "@/redux/slice/adminSlice";
 import { Loader2, LogIn, Shield } from "lucide-react";
 import { setSettingsInfo } from "@/redux/slice/settingsSlice";
+import { toastError, toastSuccess } from "@/utils/helpers";
 
 const schema = z.object({
   username: z.string().min(4, "Username must be at least 4 characters"),
@@ -53,14 +53,14 @@ export default function Home() {
         dispatch(setAdminInfo(data.data));
         dispatch(setSettingsInfo(data.settings));
         localStorage.setItem("token", data.token);
-        toast.success(data.message);
+        toastSuccess(data.message);
       } else {
-        toast.error(data.message);
+        toastError(data.message);
       }
     },
     onError: (err) => {
       console.log(err);
-      toast.error("An error occurred. Please try again.");
+      toastError("An error occurred. Please try again.");
     },
   });
 

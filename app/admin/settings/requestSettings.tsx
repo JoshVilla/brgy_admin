@@ -19,7 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Save, FileText, Plus, X, Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "sonner";
+import { toastError, toastSuccess } from "@/utils/helpers";
 
 const RequestSettings = () => {
   const queryClient = useQueryClient();
@@ -43,13 +43,13 @@ const RequestSettings = () => {
         queryClient.invalidateQueries({ queryKey: ["settings"] });
         setSaved(true);
         setTimeout(() => setSaved(false), 3000);
-        toast.success("Settings updated successfully");
+        toastSuccess("Settings updated successfully");
       } else {
-        toast.error(response.message || "Failed to update settings");
+        toastError(response.message || "Failed to update settings");
       }
     },
     onError: (error: any) => {
-      toast.error(error.message || "Failed to update settings");
+      toastError(error.message || "Failed to update settings");
     },
   });
 

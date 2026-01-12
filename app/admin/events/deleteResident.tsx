@@ -13,7 +13,7 @@ import {
 import { Trash2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { deleteEvent } from "@/services/api";
-import { toast } from "sonner";
+import { toastError, toastSuccess } from "@/utils/helpers";
 
 interface Props {
   id: string;
@@ -27,12 +27,12 @@ const DeleteEvent = ({ id, refetch, setCurrentPage }: Props) => {
     mutationFn: deleteEvent,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toast.success(data.message);
+        toastSuccess(data.message);
         setCurrentPage(1);
         refetch();
         setOpenDialog(false);
       } else {
-        toast.error(data.message);
+        toastError(data.message);
       }
     },
     onError: (error) => {

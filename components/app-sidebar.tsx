@@ -327,7 +327,7 @@ export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
                     alt="brgy logo"
                     src={adminLogo}
                     fill
-                    className="object-contain"
+                    className="object-contain rounded-full"
                     sizes="30px"
                     priority
                   />

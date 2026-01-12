@@ -5,7 +5,6 @@ import { getGeneralSettings, updateGeneralSettings } from "@/services/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,6 +19,7 @@ import { Loader2, Upload, X, Check, Info } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useDispatch } from "react-redux";
 import { setSettingsInfo } from "@/redux/slice/settingsSlice";
+import { toastError, toastSuccess } from "@/utils/helpers";
 
 const GeneralSettings = () => {
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ const GeneralSettings = () => {
     mutationFn: updateGeneralSettings,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toast.success(data.message || "Settings updated successfully!");
+        toastSuccess(data.message || "Settings updated successfully!");
         queryClient.invalidateQueries({ queryKey: ["general"] });
         dispatch(setSettingsInfo(data.general));
         setLogoFile(null);
@@ -47,11 +47,11 @@ const GeneralSettings = () => {
           fileInputRef.current.value = "";
         }
       } else {
-        toast.error(data.message || "Failed to update settings");
+        toastError(data.message || "Failed to update settings");
       }
     },
     onError: (error: any) => {
-      toast.error(error.message || "Failed to update settings");
+      toastError(error.message || "Failed to update settings");
     },
   });
 
@@ -65,13 +65,13 @@ const GeneralSettings = () => {
     const file = e.target.files?.[0];
     if (file) {
       if (!file.type.startsWith("image/")) {
-        toast.error("Please select an image file");
+        toastError("Please select an image file");
         return;
       }
 
       const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
-        toast.error("File size must be less than 5MB");
+        toastError("File size must be less than 5MB");
         return;
       }
 

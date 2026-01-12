@@ -40,10 +40,9 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { addResident } from "@/services/api";
-import { toast } from "sonner";
 import { ImportResidentExcel } from "@/components/importResidentExcel";
-import { useAuthGuard } from "@/hooks/authGuard";
 import withAuth from "@/lib/withAuth";
+import { toastError, toastSuccess } from "@/utils/helpers";
 
 const page = () => {
   const formSchema = z.object({
@@ -83,14 +82,14 @@ const page = () => {
     mutationFn: addResident,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toast.success(data.message);
+        toastSuccess(data.message);
         form.reset(); // This should now work correctly for all fields
       } else {
-        toast.error(data.message);
+        toastError(data.message);
       }
     },
     onError: (error: any) => {
-      toast.error(error.message || "An unexpected error occurred.");
+      toastError(error.message || "An unexpected error occurred.");
     },
   });
 

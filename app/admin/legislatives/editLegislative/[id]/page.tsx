@@ -21,6 +21,7 @@ import React, { useEffect, useState } from "react";
 import { IResLegislative } from "@/utils/types";
 import { toast } from "sonner";
 import { Download } from "lucide-react";
+import { toastError, toastLoading, toastSuccess } from "@/utils/helpers";
 
 const EditLegislativePage = () => {
   const params = useParams();
@@ -93,7 +94,7 @@ const EditLegislativePage = () => {
 
   const handleDownload = async () => {
     try {
-      toast.loading("Downloading...");
+      toastLoading("Downloading...");
 
       const response = await fetch(legislativeData.file);
       const blob = await response.blob();
@@ -110,11 +111,11 @@ const EditLegislativePage = () => {
       window.URL.revokeObjectURL(url);
 
       toast.dismiss();
-      toast.success("Downloaded successfully!");
+      toastSuccess("Downloaded successfully!");
     } catch (error) {
       console.error("Download error:", error);
       toast.dismiss();
-      toast.error("Failed to download PDF");
+      toastError("Failed to download PDF");
     }
   };
 
@@ -122,14 +123,14 @@ const EditLegislativePage = () => {
     mutationFn: editLegislative,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toast.success(data.message);
+        toastSuccess(data.message);
         router.push("/admin/legislatives");
       } else {
-        toast.error(data.message);
+        toastError(data.message);
       }
     },
     onError: (err: any) => {
-      toast.error(err?.message || "An error occurred");
+      toastError(err?.message || "An error occurred");
     },
   });
 

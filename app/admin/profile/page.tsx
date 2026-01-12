@@ -21,8 +21,8 @@ import { IResAdmin } from "@/utils/types";
 import withAuth from "@/lib/withAuth";
 import { useMutation } from "@tanstack/react-query";
 import { updateProfile } from "@/services/api";
-import { toast } from "sonner";
 import { setAdminInfo } from "@/redux/slice/adminSlice";
+import { toastError, toastSuccess } from "@/utils/helpers";
 
 // Password strength regex
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/;
@@ -78,12 +78,12 @@ const EditAccountForm = () => {
     mutationFn: updateProfile,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toast.success(data.message);
+        toastSuccess(data.message);
         dispatch(setAdminInfo(data.data));
       }
     },
     onError: (error: any) => {
-      toast.error(error.message || "Failed to update profile");
+      toastError(error.message || "Failed to update profile");
     },
   });
 

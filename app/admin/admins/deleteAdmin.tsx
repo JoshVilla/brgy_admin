@@ -13,10 +13,10 @@ import {
 import { Trash2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { deleteAdmin } from "@/services/api";
-import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { IResAdmin } from "@/utils/types";
+import { toastError, toastSuccess } from "@/utils/helpers";
 
 interface Props {
   id: string;
@@ -35,21 +35,27 @@ const DeleteAdmin = ({ id, refetch, setCurrentPage }: Props) => {
     mutationFn: deleteAdmin,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toast.success(data.message);
+        toastSuccess(data.message);
         setCurrentPage(1);
         refetch();
         setOpenDialog(false);
       } else {
-        toast.error(data.message);
+        toastError(data.message);
       }
     },
     onError: () => {
-      toast.error("Something went wrong while deleting the admin.");
+      toastError("Something went wrong while deleting the admin.");
     },
   });
 
   const handleDelete = () => {
-    deleteMutation.mutate({ id });
+    //check if trying to delete own account
+    if (id === adminInfo._id) {
+      toastError("Unable to delete own account");
+      return;
+    } else {
+      deleteMutation.mutate({ id });
+    }
   };
 
   // ❌ Block regular admins from deleting

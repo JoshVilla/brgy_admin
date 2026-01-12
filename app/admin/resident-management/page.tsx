@@ -144,6 +144,14 @@ const page = () => {
       <div>
         <SearchForm searchProps={searchProps} onSearch={handleSearch} />
 
+        <div className="mb-4 flex justify-center md:justify-end gap-4">
+          <Badge className="bg-green-500">{data?.total || 0} Total</Badge>
+          <Badge variant="default">{data?.totalVerified || 0} Verified</Badge>
+          <Badge variant="secondary">
+            {data?.totalNotVerified || 0} Not Verified
+          </Badge>
+        </div>
+
         {/* Desktop View */}
         <div className="hidden md:block">
           <Table>

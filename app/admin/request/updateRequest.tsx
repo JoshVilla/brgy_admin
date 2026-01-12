@@ -24,11 +24,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { STATUS } from "@/utils/constant";
 import { useMutation } from "@tanstack/react-query";
 import { updateStatusRequest } from "@/services/api";
-import { toast } from "sonner";
 import Image from "next/image";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
-import { calculateAge } from "@/utils/helpers";
+import { calculateAge, toastError, toastSuccess } from "@/utils/helpers";
 import { requestTypeText } from "@/utils/nonAsyncHelpers";
 interface Props {
   record: IResRequest;
@@ -43,21 +42,21 @@ const UpdateRequest = ({ record, refetch }: Props) => {
     mutationFn: updateStatusRequest,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toast.success(data.message);
+        toastSuccess(data.message);
         refetch();
       } else {
-        toast.error(data.message);
+        toastError(data.message);
       }
     },
     onError: (error) => {
       console.error(error);
-      toast.error("Something went wrong.");
+      toastError("Something went wrong.");
     },
   });
 
   const handleChange = () => {
     if (status === STATUS.CANCELLED && !reasonOfCancellation.trim()) {
-      toast.error("Please provide a reason for cancellation.");
+      toastError("Please provide a reason for cancellation.");
       return;
     }
 

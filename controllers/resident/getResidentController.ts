@@ -113,6 +113,18 @@ export async function ResidentController({
     { $sort: { createdAt: -1 } },
   ];
 
+  //total verified and not verified
+  const result = await Resident.aggregate([
+    {
+      $group: {
+        _id: "$isVerified",
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+  const totalVerified = result.find((r) => r._id === true)?.count || 0;
+  const totalNotVerified = result.find((r) => r._id === false)?.count || 0;
+
   // Get total unique count
   const countPipeline = [...pipeline, { $count: "total" }];
   const countResult = await Resident.aggregate(countPipeline);
@@ -123,12 +135,13 @@ export async function ResidentController({
 
   const residents = await Resident.aggregate(pipeline);
 
-  //@ts-ignore
   const newResidents = addAgeToResidents(residents);
 
   return {
     data: newResidents,
     total,
+    totalVerified,
+    totalNotVerified,
     currentPage: page,
     totalPages: Math.ceil(total / limit),
     isSuccess: true,

@@ -34,7 +34,7 @@ import { Camera, User, Phone, Shield, Users } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { toast } from "sonner";
+import { toastError, toastSuccess } from "@/utils/helpers";
 
 const formSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -84,16 +84,16 @@ const Page = () => {
     mutationFn: addOfficial,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toast.success(data.message);
+        toastSuccess(data.message);
         form.reset();
         setPhotoFile(null);
         setPhotoPreview(null);
       } else {
-        toast.error(data.message);
+        toastError(data.message);
       }
     },
     onError: (error: any) => {
-      toast.error(error.message || "Failed to add official");
+      toastError(error.message || "Failed to add official");
     },
   });
 
