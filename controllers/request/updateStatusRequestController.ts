@@ -4,18 +4,42 @@ import Request from "@/models/requestModel";
 import { STATUS } from "@/utils/constant";
 import { connectToDatabase } from "@/lib/mongodb";
 import { deleteCloudinaryImage } from "@/utils/asyncHelpers";
+import { logActivity } from "../activitylog/addActivityLogController";
 
-export async function UpdateStatusRequestController(params: {
-  _id: string;
-  status: string;
-  reasonOfCancelation?: string;
-  userAppId: string;
-  requestType: string;
-}) {
+export async function UpdateStatusRequestController(
+  params: {
+    _id: string;
+    status: string;
+    reasonOfCancelation?: string;
+    userAppId: string;
+    requestType: string;
+    adminName?: string; // Add this for logging who made the change
+  },
+  currentUsername: string
+) {
   try {
     await connectToDatabase();
 
-    const { _id, status, reasonOfCancelation, userAppId, requestType } = params;
+    const {
+      _id,
+      status,
+      reasonOfCancelation,
+      userAppId,
+      requestType,
+      adminName,
+    } = params;
+
+    // Get the current request to retrieve old status and imgProof
+    const currentRequest = await Request.findById(_id);
+
+    if (!currentRequest) {
+      return {
+        isSuccess: false,
+        message: "Request not found",
+      };
+    }
+
+    const oldStatus = currentRequest.status;
 
     const updatePayload: any = { status };
     if (status === STATUS.CANCELLED && reasonOfCancelation) {
@@ -27,9 +51,6 @@ export async function UpdateStatusRequestController(params: {
     let res;
 
     if (status === STATUS.CANCELLED || status === STATUS.APPROVED) {
-      // Get the current request to retrieve imgProof
-      const currentRequest = await Request.findById(_id);
-
       // Delete image from Cloudinary if it exists
       if (currentRequest?.imgProof) {
         try {
@@ -59,6 +80,16 @@ export async function UpdateStatusRequestController(params: {
         new: true,
       });
     }
+
+    // 📝 Log activity
+
+    let activityDescription = `Changed ${requestType} request status from "${oldStatus}" to "${status}"`;
+    console.log(activityDescription, "activityDescription", currentUsername);
+    if (status === STATUS.CANCELLED && reasonOfCancelation) {
+      activityDescription += ` - Reason: ${reasonOfCancelation}`;
+    }
+
+    await logActivity(currentUsername, activityDescription, "Edit", "Requests");
 
     // 🔔 Notify mobile user
     notifyMobile({

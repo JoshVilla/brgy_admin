@@ -22,6 +22,7 @@ import { IResLegislative } from "@/utils/types";
 import { toast } from "sonner";
 import { Download } from "lucide-react";
 import { toastError, toastLoading, toastSuccess } from "@/utils/helpers";
+import withAuth from "@/lib/withAuth";
 
 const EditLegislativePage = () => {
   const params = useParams();
@@ -417,4 +418,4 @@ const EditLegislativePage = () => {
   );
 };
 
-export default EditLegislativePage;
+export default withAuth(EditLegislativePage);

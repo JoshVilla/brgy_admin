@@ -23,6 +23,7 @@ import { usePagination } from "@/hooks/usePagination";
 import { PaginationControls } from "@/components/paginationControl";
 import SearchForm from "@/components/searchForm";
 import { searchProps } from "./searchProps";
+import withAuth from "@/lib/withAuth";
 
 export interface Blotter {
   _id: string;
@@ -292,4 +293,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withAuth(Page);

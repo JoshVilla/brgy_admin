@@ -3,9 +3,10 @@ import { UpdateStatusRequestController } from "@/controllers/request/updateStatu
 
 export async function POST(req: NextRequest) {
   try {
+    const userName = req.headers.get("x-User-name") || "Unknown User";
     const body = await req.json();
 
-    const response = await UpdateStatusRequestController(body);
+    const response = await UpdateStatusRequestController(body, userName);
 
     return NextResponse.json(response);
   } catch (error: any) {

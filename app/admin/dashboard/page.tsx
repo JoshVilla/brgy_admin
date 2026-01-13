@@ -24,10 +24,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import NewRequest from "./newRequest";
+import { IResRequest } from "@/utils/types";
 
 const Page = () => {
   const [dateTime, setDateTime] = useState("");
-  const { data, isLoading } = useQuery({
+  const [newRequest, setNewRequest] = useState<IResRequest[]>([]);
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["counts"],
     queryFn: () => getTotals({}),
   });
@@ -71,6 +74,7 @@ const Page = () => {
   }
 
   const events = data?.events || {};
+  const requests = data?.requests || [];
 
   return (
     <Container>
@@ -157,13 +161,11 @@ const Page = () => {
           {/* Graphs Section */}
           <Card>
             <CardHeader>
-              <CardTitle>Analytics Overview</CardTitle>
-              <CardDescription>
-                Population and demographic statistics
-              </CardDescription>
+              <CardTitle>New Request</CardTitle>
+              <CardDescription>Check new request</CardDescription>
             </CardHeader>
             <CardContent>
-              <Graphs />
+              <NewRequest request={requests} refetch={refetch} />
             </CardContent>
           </Card>
         </div>

@@ -21,6 +21,7 @@ import { addLegislative } from "@/services/api";
 import { Spinner } from "@/components/ui/spinner";
 import { Plus } from "lucide-react";
 import { toastError, toastSuccess } from "@/utils/helpers";
+import withAuth from "@/lib/withAuth";
 
 const AddLegislativePage = () => {
   const router = useRouter();
@@ -322,4 +323,4 @@ const AddLegislativePage = () => {
   );
 };
 
-export default AddLegislativePage;
+export default withAuth(AddLegislativePage);

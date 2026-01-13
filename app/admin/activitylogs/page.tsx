@@ -27,10 +27,12 @@ const page = () => {
     setTotalPages,
     handlePageChange,
     setCurrentPage,
+    limit,
+    handleLimitChange,
   } = usePagination();
   const { data, isLoading } = useQuery({
-    queryKey: ["activity", currentPage],
-    queryFn: () => getActivity({ page: currentPage }),
+    queryKey: ["activity", currentPage, limit],
+    queryFn: () => getActivity({ page: currentPage, limit }),
   });
 
   useEffect(() => {
@@ -94,7 +96,7 @@ const page = () => {
 
     return activityLog.map((activity: IResActivityLog) => (
       <TableRow key={activity._id}>
-        <TableCell className="max-w-40 truncate">{activity.activity}</TableCell>
+        <TableCell className="max-w-64 truncate">{activity.activity}</TableCell>
         <TableCell>{getActionBadge(activity.action)}</TableCell>
         <TableCell>{activity.page}</TableCell>
         <TableCell>{activity.name}</TableCell>
@@ -177,6 +179,8 @@ const page = () => {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
+            limit={limit}
+            onLimitChange={handleLimitChange}
           />
         )}
       </div>

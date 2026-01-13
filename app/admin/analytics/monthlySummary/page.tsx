@@ -47,6 +47,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
+import withAuth from "@/lib/withAuth";
 
 const MonthlySummary = () => {
   const now = new Date();
@@ -770,4 +771,4 @@ const MonthlySummary = () => {
   );
 };
 
-export default MonthlySummary;
+export default withAuth(MonthlySummary);

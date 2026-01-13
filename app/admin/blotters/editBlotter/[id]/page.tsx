@@ -32,6 +32,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { toastError, toastSuccess } from "@/utils/helpers";
+import withAuth from "@/lib/withAuth";
 
 // Form validation schema
 const blotterFormSchema = z.object({
@@ -359,4 +360,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withAuth(Page);

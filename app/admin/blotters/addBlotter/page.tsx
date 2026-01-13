@@ -29,6 +29,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMutation } from "@tanstack/react-query";
 import { addBlotter } from "@/services/api";
 import { toastError, toastSuccess } from "@/utils/helpers";
+import withAuth from "@/lib/withAuth";
 
 // Form validation schema
 const blotterFormSchema = z.object({
@@ -282,4 +283,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withAuth(Page);

@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings as SettingsIcon, FileText } from "lucide-react";
 import RequestSettings from "./requestSettings";
 import GeneralSettings from "./generalSettings";
+import withAuth from "@/lib/withAuth";
 
 const page = () => {
   return (
@@ -36,4 +37,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default withAuth(page);

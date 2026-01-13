@@ -10,6 +10,7 @@ import { Users, FileText } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import ResidentsPage from "./residents";
 import RequestPage from "./request";
+import withAuth from "@/lib/withAuth";
 
 const page = () => {
   return (
@@ -43,4 +44,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default withAuth(page);

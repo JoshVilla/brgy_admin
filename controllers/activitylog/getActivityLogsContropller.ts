@@ -9,7 +9,7 @@ interface GetActivityLogsParams {
 
 export async function GetActivityLogsController({
   page = 1,
-  limit = 20,
+  limit = 10,
   filters = {},
 }: GetActivityLogsParams = {}) {
   try {

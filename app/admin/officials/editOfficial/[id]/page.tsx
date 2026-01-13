@@ -36,6 +36,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
 import { useParams, useRouter } from "next/navigation";
+import withAuth from "@/lib/withAuth";
 
 const formSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -466,4 +467,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withAuth(Page);

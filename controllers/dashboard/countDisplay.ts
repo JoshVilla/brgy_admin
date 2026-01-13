@@ -61,6 +61,12 @@ export async function GetTotalCountsController() {
       return eventDate >= startOfTomorrow;
     });
 
+    const requests = await Request.find({ status: "pending" })
+      .limit(20)
+      .sort({ createdAt: -1 })
+      .populate("resident")
+      .lean();
+
     return {
       totals: {
         totalResidents,
@@ -71,6 +77,7 @@ export async function GetTotalCountsController() {
         currentEvents, // array with earliest event first (today only)
         nextEvent: nextEvent || null, // earliest event from tomorrow onwards
       },
+      requests,
     };
   } catch (error) {
     console.error("GetTotalCountsController error:", error);

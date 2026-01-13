@@ -20,6 +20,7 @@ import {
   Loader2,
   Edit,
 } from "lucide-react";
+import withAuth from "@/lib/withAuth";
 
 interface Blotter {
   _id: string;
@@ -289,4 +290,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withAuth(Page);
