@@ -286,8 +286,12 @@ export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <a href="#" onClick={onItemClick}>
+              <SidebarMenuButton asChild className="h-auto py-2">
+                <a
+                  href="#"
+                  onClick={onItemClick}
+                  className="flex items-start gap-2 overflow-visible"
+                >
                   <div className="relative w-[30px] h-[30px] flex-shrink-0">
                     <Image
                       alt="brgy logo"
@@ -297,7 +301,9 @@ export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
                       sizes="30px"
                     />
                   </div>
-                  <span className="text-base font-semibold">{adminTitle}</span>
+                  <span className="text-base font-semibold whitespace-normal break-words leading-tight overflow-visible">
+                    {adminTitle}
+                  </span>
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -320,8 +326,20 @@ export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <a href="#" onClick={onItemClick}>
+            <SidebarMenuButton
+              asChild
+              className="h-auto py-2 [&>*]:overflow-visible"
+            >
+              <a
+                href="#"
+                onClick={onItemClick}
+                className="flex items-start gap-2"
+                style={{
+                  overflow: "visible",
+                  textOverflow: "clip",
+                  whiteSpace: "normal",
+                }}
+              >
                 <div className="relative w-[30px] h-[30px] flex-shrink-0">
                   <Image
                     alt="brgy logo"
@@ -332,7 +350,16 @@ export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
                     priority
                   />
                 </div>
-                <span className="text-base font-semibold">{adminTitle}</span>
+                <span
+                  className="text-base font-semibold break-words leading-tight"
+                  style={{
+                    overflow: "visible",
+                    textOverflow: "clip",
+                    whiteSpace: "normal",
+                  }}
+                >
+                  {adminTitle}
+                </span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

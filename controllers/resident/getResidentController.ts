@@ -1,6 +1,6 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import Resident from "@/models/residentModel";
-import { Types } from "mongoose"; // Add this import
+import { Types } from "mongoose";
 
 // calculate age safely
 const calculateAge = (birthDateStr?: string | Date): number | null => {
@@ -70,6 +70,8 @@ export async function ResidentController({
       return {
         data: [],
         total: 0,
+        totalVerified: 0,
+        totalNotVerified: 0,
         currentPage: page,
         totalPages: 0,
         isSuccess: false,
@@ -113,8 +115,9 @@ export async function ResidentController({
     { $sort: { createdAt: -1 } },
   ];
 
-  //total verified and not verified
+  // Total verified and not verified - BASED ON FILTERED DATA
   const result = await Resident.aggregate([
+    { $match: query }, // Apply the same filters here
     {
       $group: {
         _id: "$isVerified",
@@ -128,6 +131,7 @@ export async function ResidentController({
   // Get total unique count
   const countPipeline = [...pipeline, { $count: "total" }];
   const countResult = await Resident.aggregate(countPipeline);
+  console.log(pipeline);
   const total = countResult[0]?.total || 0;
 
   // Add pagination

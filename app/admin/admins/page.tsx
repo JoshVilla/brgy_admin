@@ -84,7 +84,12 @@ const page = () => {
     }
     return adminData.map((data: IResAdmin) => (
       <TableRow key={data._id}>
-        <TableCell>{`${data.username}`}</TableCell>
+        <TableCell>
+          <span>{`${data.username}`}</span>
+          {data.username === adminInfo.username && (
+            <span className="text-blue-400 ml-4">(Me)</span>
+          )}
+        </TableCell>
         <TableCell>{`${
           data.isSuperAdmin ? "Super Admin" : "Admin"
         }`}</TableCell>
@@ -179,7 +184,13 @@ const page = () => {
                 >
                   <Card key={data._id} className="p-4 shadow-sm border">
                     <CardHeader>
-                      <CardTitle>{data.username}</CardTitle>
+                      <CardTitle>
+                        {" "}
+                        <span>{`${data.username}`}</span>
+                        {data.username === adminInfo.username && (
+                          <span className="text-blue-400 ml-4">(Me)</span>
+                        )}
+                      </CardTitle>
                       <CardDescription>
                         {data.isSuperAdmin ? "Super Admin" : "Admin"}
                       </CardDescription>
