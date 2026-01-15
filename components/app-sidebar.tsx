@@ -71,6 +71,7 @@ const privilegeKeyMap: Record<string, keyof IPrivilege> = {
   "Brgy Officials": "official",
   Settings: "setting",
   "Activity Logs": "activitylog",
+  "Incident Report": "incident",
 };
 
 interface IPrivilege {
@@ -88,6 +89,7 @@ interface IPrivilege {
   official: number;
   setting: number;
   activitylog: number;
+  incident: number;
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -136,6 +138,11 @@ export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
     {
       title: "Blotters",
       url: "/admin/blotters/",
+      icon: MessageSquareWarning,
+    },
+    {
+      title: "Incident Report",
+      url: "/admin/incident-report/",
       icon: MessageSquareWarning,
     },
     {
