@@ -57,7 +57,7 @@ const page = () => {
         </TableRow>
       );
     }
-    if (data.length === 0) {
+    if (announcementData.length === 0) {
       return (
         <TableRow>
           <TableCell
