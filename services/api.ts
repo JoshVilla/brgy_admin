@@ -181,3 +181,17 @@ export const editOfficial = async (params: any): Promise<any> => {
 export const getActivity = async (params: any): Promise<any> => {
   return await post("/api/activityLog", params);
 };
+
+//incident report
+
+export const addIncidentReport = async (params: any): Promise<any> => {
+  return await post("/api/incident/addIncident", params, true);
+};
+
+export const getIncidentReport = async (params: any): Promise<any> => {
+  return await post("/api/incident", params);
+};
+
+export const updateStatusIncidentReport = async (params: any): Promise<any> => {
+  return await post("/api/incident/editIncident", params);
+};

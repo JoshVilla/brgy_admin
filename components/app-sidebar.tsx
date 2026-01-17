@@ -36,6 +36,7 @@ import {
   Calendar1,
   ChartGantt,
   FileText,
+  FileWarning,
   GitGraph,
   Megaphone,
   MessageSquareWarning,
@@ -143,7 +144,7 @@ export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
     {
       title: "Incident Report",
       url: "/admin/incident-report/",
-      icon: MessageSquareWarning,
+      icon: FileWarning,
     },
     {
       title: "Analytics",
