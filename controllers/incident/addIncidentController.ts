@@ -13,6 +13,7 @@ export async function AddIncidentReportController(formData: FormData) {
     const dateOccurred = formData.get("dateOccurred") as string;
     const reporterName = formData.get("reporterName") as string;
     const reporterContact = formData.get("reporterContact") as string;
+    const residentId = formData.get("residentId") as string | null; // Extract residentId
 
     // Validate required fields
     if (
@@ -66,6 +67,7 @@ export async function AddIncidentReportController(formData: FormData) {
       dateOccurred: new Date(dateOccurred),
       reporterName,
       reporterContact,
+      residentId: residentId || null, // Add residentId (optional)
       status: "pending",
       images: imageUrls,
     });

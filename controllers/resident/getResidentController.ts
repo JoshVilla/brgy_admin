@@ -9,12 +9,11 @@ const calculateAge = (birthDateStr?: string | Date): number | null => {
   let birthDate: Date;
 
   if (typeof birthDateStr === "string") {
-    // Attempt to parse manually: "February 14,2000"
     const match = birthDateStr.match(/([A-Za-z]+)\s+(\d+),\s*(\d{4})/);
     if (!match) return null;
 
     const [, monthStr, dayStr, yearStr] = match;
-    const month = new Date(`${monthStr} 1, 2000`).getMonth(); // convert month name to number
+    const month = new Date(`${monthStr} 1, 2000`).getMonth();
     const day = parseInt(dayStr, 10);
     const year = parseInt(yearStr, 10);
 
@@ -40,7 +39,7 @@ const calculateAge = (birthDateStr?: string | Date): number | null => {
 
 // add age to residents
 const addAgeToResidents = <T extends { birthdate?: string | Date }>(
-  residents: T[]
+  residents: T[],
 ): (T & { age: number | null })[] => {
   return residents.map((resident) => ({
     ...resident,
@@ -100,7 +99,7 @@ export async function ResidentController({
     });
   }
 
-  // Use aggregation to ensure unique results
+  // Use aggregation to ensure unique results with User lookup
   const pipeline: any[] = [
     { $match: query },
     { $sort: { createdAt: -1 } },
@@ -112,12 +111,48 @@ export async function ResidentController({
       },
     },
     { $replaceRoot: { newRoot: "$doc" } },
+    // CRITICAL FIX: Convert userAppId string to ObjectId before lookup
+    {
+      $addFields: {
+        userAppIdObjectId: {
+          $cond: {
+            if: { $ne: ["$userAppId", null] },
+            then: { $toObjectId: "$userAppId" },
+            else: null,
+          },
+        },
+      },
+    },
+    // Lookup User data using the converted ObjectId
+    {
+      $lookup: {
+        from: "users",
+        localField: "userAppIdObjectId", // Use the converted ObjectId
+        foreignField: "_id",
+        as: "userData",
+      },
+    },
+    // Add contactNumber field from User
+    {
+      $addFields: {
+        contactNumber: {
+          $ifNull: [{ $arrayElemAt: ["$userData.phoneNumber", 0] }, null],
+        },
+      },
+    },
+    // Remove temporary fields
+    {
+      $project: {
+        userData: 0,
+        userAppIdObjectId: 0, // Remove the temporary ObjectId field
+      },
+    },
     { $sort: { createdAt: -1 } },
   ];
 
   // Total verified and not verified - BASED ON FILTERED DATA
   const result = await Resident.aggregate([
-    { $match: query }, // Apply the same filters here
+    { $match: query },
     {
       $group: {
         _id: "$isVerified",
@@ -131,7 +166,7 @@ export async function ResidentController({
   // Get total unique count
   const countPipeline = [...pipeline, { $count: "total" }];
   const countResult = await Resident.aggregate(countPipeline);
-  console.log(pipeline);
+
   const total = countResult[0]?.total || 0;
 
   // Add pagination

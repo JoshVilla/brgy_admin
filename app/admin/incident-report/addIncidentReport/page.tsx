@@ -18,6 +18,9 @@ import { useMutation } from "@tanstack/react-query";
 import { addIncidentReport } from "@/services/api";
 import { toastError, toastSuccess } from "@/utils/helpers";
 
+import { IResResident } from "@/utils/types";
+import ResidentCombobox from "@/components/searchResidents";
+
 const Page = () => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -27,7 +30,9 @@ const Page = () => {
     dateOccurred: "",
     reporterName: "",
     reporterContact: "",
+    residentId: "" as string, // Changed from null to empty string for better TypeScript handling
   });
+  const [isManualInput, setIsManualInput] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
@@ -36,7 +41,6 @@ const Page = () => {
     onSuccess: (data) => {
       if (data.isSuccess) {
         toastSuccess(data.message);
-        // Reset form on success
         setFormData({
           incidentType: "",
           description: "",
@@ -44,9 +48,11 @@ const Page = () => {
           dateOccurred: "",
           reporterName: "",
           reporterContact: "",
+          residentId: "",
         });
         setImages([]);
         setImagePreviews([]);
+        setIsManualInput(false);
       } else {
         toastError(data.message);
       }
@@ -64,6 +70,28 @@ const Page = () => {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Handle resident selection from combobox
+  const handleResidentSelect = (resident: IResResident) => {
+    const fullName =
+      `${resident.firstname} ${resident.middlename || ""} ${resident.lastname}`.trim();
+    setFormData((prev) => ({
+      ...prev,
+      reporterName: fullName,
+      reporterContact: resident.contactNumber || "",
+      residentId: resident._id || "", // Changed from null to empty string
+    }));
+  };
+
+  // Clear resident data
+  const handleClearResident = () => {
+    setFormData((prev) => ({
+      ...prev,
+      reporterName: "",
+      reporterContact: "",
+      residentId: "", // Clear residentId too
+    }));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,7 +125,6 @@ const Page = () => {
     setLoading(true);
 
     try {
-      // Create FormData
       const submitData = new FormData();
       submitData.append("incidentType", formData.incidentType);
       submitData.append("description", formData.description);
@@ -106,12 +133,16 @@ const Page = () => {
       submitData.append("reporterName", formData.reporterName);
       submitData.append("reporterContact", formData.reporterContact);
 
+      // Append residentId if it exists (from combobox selection)
+      if (formData.residentId) {
+        submitData.append("residentId", formData.residentId);
+      }
+
       // Append images
       images.forEach((image) => {
         submitData.append("images", image);
       });
 
-      // Call mutation
       addMutation.mutate(submitData);
     } catch (error) {
       console.error("Error:", error);
@@ -190,17 +221,39 @@ const Page = () => {
             />
           </div>
 
-          {/* Reporter Name */}
+          {/* Reporter Name - WITH COMBOBOX */}
           <div className="space-y-2">
-            <Label htmlFor="reporterName">Your Name</Label>
-            <Input
-              id="reporterName"
-              name="reporterName"
-              value={formData.reporterName}
-              onChange={handleInputChange}
-              placeholder="Enter your full name"
-              required
-            />
+            <div className="flex items-center gap-4">
+              <Label>Reporter Name</Label>
+              <Button
+                type="button"
+                variant="link"
+                size="sm"
+                onClick={() => {
+                  setIsManualInput(!isManualInput);
+                  handleClearResident();
+                }}
+                className="text-xs h-8 cursor-pointer"
+              >
+                {isManualInput ? "Search Resident" : "Manual Input"}
+              </Button>
+            </div>
+
+            {!isManualInput ? (
+              <ResidentCombobox
+                value={formData.reporterName}
+                onSelect={handleResidentSelect}
+              />
+            ) : (
+              <Input
+                id="reporterName"
+                name="reporterName"
+                value={formData.reporterName}
+                onChange={handleInputChange}
+                placeholder="Enter full name"
+                required
+              />
+            )}
           </div>
 
           {/* Reporter Contact */}
@@ -247,7 +300,6 @@ const Page = () => {
                 </div>
               )}
 
-              {/* Image Previews */}
               {imagePreviews.length > 0 && (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {imagePreviews.map((preview, index) => (

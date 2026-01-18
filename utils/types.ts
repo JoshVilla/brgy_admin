@@ -19,6 +19,7 @@ export interface IServiceParams {
 }
 
 export interface IResResident extends IResident {
+  contactNumber?: string;
   _id: string;
 }
 

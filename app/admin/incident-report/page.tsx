@@ -22,6 +22,7 @@ import { searchProps } from "./searchProps";
 import { usePagination } from "@/hooks/usePagination";
 import EditStatus from "./editStatus";
 import { formattedDate } from "@/utils/nonAsyncHelpers";
+import DeleteIncident from "./deleteIncident";
 
 const page = () => {
   const router = useRouter();
@@ -114,6 +115,11 @@ const page = () => {
                 `/admin/incident-report/viewIncidentReport/${data._id}`,
               )
             }
+          />
+          <DeleteIncident
+            id={data._id}
+            refetch={refetch}
+            setCurrentPage={setCurrentPage}
           />
         </TableCell>
       </TableRow>

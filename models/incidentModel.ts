@@ -1,71 +1,37 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose from "mongoose";
 
-export interface IIncidentReport extends Document {
+export interface IIncidentReport {
   referenceNumber: string;
-  incidentType:
-    | "crime"
-    | "accident"
-    | "dispute"
-    | "noise"
-    | "fire"
-    | "health"
-    | "environmental"
-    | "other";
+  incidentType: string;
   description: string;
   location: string;
   dateOccurred: Date;
   reporterName: string;
   reporterContact: string;
-  status: "pending" | "investigating" | "resolved";
+  residentId?: mongoose.Types.ObjectId; // Optional: links to Resident
+  status: "pending" | "investigating" | "resolved" | "closed";
   images?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
 
-const IncidentReportSchema = new Schema<IIncidentReport>(
+const IncidentReportSchema = new mongoose.Schema<IIncidentReport>(
   {
-    referenceNumber: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    incidentType: {
-      type: String,
-      required: true,
-      enum: [
-        "crime",
-        "accident",
-        "dispute",
-        "noise",
-        "fire",
-        "health",
-        "environmental",
-        "other",
-      ],
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    location: {
-      type: String,
-      required: true,
-    },
-    dateOccurred: {
-      type: Date,
-      required: true,
-    },
-    reporterName: {
-      type: String,
-      required: true,
-    },
-    reporterContact: {
-      type: String,
-      required: true,
-    },
+    referenceNumber: { type: String, required: true, unique: true },
+    incidentType: { type: String, required: true },
+    description: { type: String, required: true },
+    location: { type: String, required: true },
+    dateOccurred: { type: Date, required: true },
+    reporterName: { type: String, required: true },
+    reporterContact: { type: String, required: true },
+    residentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Resident",
+      default: null,
+    }, // Optional: links to Resident document
     status: {
       type: String,
-      enum: ["pending", "investigating", "resolved"],
+      enum: ["pending", "investigating", "resolved", "closed"],
       default: "pending",
     },
     images: {
@@ -78,10 +44,9 @@ const IncidentReportSchema = new Schema<IIncidentReport>(
         message: "Maximum 5 images allowed",
       },
     },
+    // ... other fields
   },
-  {
-    timestamps: true,
-  },
+  { timestamps: true },
 );
 
 const IncidentReport =

@@ -195,3 +195,7 @@ export const getIncidentReport = async (params: any): Promise<any> => {
 export const updateStatusIncidentReport = async (params: any): Promise<any> => {
   return await post("/api/incident/editIncident", params);
 };
+
+export const deleteIncidentReport = async (params: any): Promise<any> => {
+  return await post("/api/incident/deleteIncident", params);
+};
