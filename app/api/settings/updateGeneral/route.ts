@@ -3,8 +3,9 @@ import { UpdateGeneralSettingsController } from "@/controllers/settings/UpdateGe
 
 export async function POST(req: NextRequest) {
   try {
+    const userName = req.headers.get("x-user-name") || "Unknown User";
     const formData = await req.formData();
-    const response = await UpdateGeneralSettingsController(formData);
+    const response = await UpdateGeneralSettingsController(formData, userName);
 
     return NextResponse.json(response);
   } catch (error: any) {
