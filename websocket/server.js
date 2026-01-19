@@ -35,6 +35,16 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("newIncident", (data) => {
+    console.log("📨 New request from mobile:", data);
+
+    io.emit("adminNotificationIncident", {
+      type: "new-incident",
+      message: `New request from ${data.user}`,
+      data,
+    });
+  });
+
   // 🔔 Next.js API → Mobile (ADD THIS)
   socket.on("notifyMobile", ({ room, event, data }) => {
     console.log(`📤 Forwarding to room: ${room}, event: ${event}`);

@@ -15,6 +15,7 @@ export interface IPrivilage {
   setting: number;
   activitylog: number;
   incident: number;
+  lostandfound: number;
 }
 
 const PrivilageSchema = new mongoose.Schema<IPrivilage>(
@@ -33,8 +34,9 @@ const PrivilageSchema = new mongoose.Schema<IPrivilage>(
     setting: { type: Number, required: true, default: 0 },
     activitylog: { type: Number, required: true, default: 0 },
     incident: { type: Number, required: true, default: 0 },
+    lostandfound: { type: Number, required: true, default: 0 },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Privilage =

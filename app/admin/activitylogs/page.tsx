@@ -160,10 +160,12 @@ const page = () => {
         {/* Desktop Table View */}
         <div className="hidden md:block">
           <Table className="mt-6">
-            <TableHeader>
+            <TableHeader className="bg-slate-800">
               <TableRow>
                 {tableHeaders.map((header, index) => (
-                  <TableHead key={index}>{header}</TableHead>
+                  <TableHead key={index} className="text-white">
+                    {header}
+                  </TableHead>
                 ))}
               </TableRow>
             </TableHeader>

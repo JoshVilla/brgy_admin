@@ -33,6 +33,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import {
+  Box,
   Calendar1,
   ChartGantt,
   FileText,
@@ -73,6 +74,7 @@ const privilegeKeyMap: Record<string, keyof IPrivilege> = {
   Settings: "setting",
   "Activity Logs": "activitylog",
   "Incident Report": "incident",
+  "Lost and Found": "lostandfound",
 };
 
 interface IPrivilege {
@@ -91,6 +93,7 @@ interface IPrivilege {
   setting: number;
   activitylog: number;
   incident: number;
+  lostandfound: number;
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -98,11 +101,11 @@ interface IPrivilege {
 
 export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
   const adminInfo = useSelector(
-    (state: RootState) => state.admin.adminInfo as IResAdmin
+    (state: RootState) => state.admin.adminInfo as IResAdmin,
   );
 
   const settingsInfo = useSelector(
-    (state: RootState) => state.settings.settingsInfo as IGeneralSettings
+    (state: RootState) => state.settings.settingsInfo as IGeneralSettings,
   );
 
   const { data, isLoading } = useQuery({
@@ -175,6 +178,11 @@ export function AppSidebar({ onItemClick, ...props }: AppSidebarProps) {
       title: "Activity Logs",
       url: "/admin/activitylogs/",
       icon: NotebookPen,
+    },
+    {
+      title: "Lost and Found",
+      url: "/admin/lostandfound/",
+      icon: Box,
     },
   ];
 

@@ -101,7 +101,7 @@ const page = () => {
               className="w-4 h-4 text-blue-500 cursor-pointer hover:scale-110"
               onClick={() =>
                 router.push(
-                  `/admin/resident-management/editResident/${data._id}`
+                  `/admin/resident-management/editResident/${data._id}`,
                 )
               }
             />
@@ -154,14 +154,17 @@ const page = () => {
 
         {/* Desktop View */}
         <div className="hidden md:block">
-          <Table>
-            <TableHeader>
+          <Table className="border">
+            <TableHeader className="bg-slate-800">
               <TableRow>
                 {tableHeaders.map((header, index) => (
-                  <TableHead key={index}>{header}</TableHead>
+                  <TableHead key={index} className="text-white">
+                    {header}
+                  </TableHead>
                 ))}
               </TableRow>
             </TableHeader>
+
             <TableBody>{renderTableRows()}</TableBody>
           </Table>
         </div>
@@ -236,7 +239,7 @@ const page = () => {
                           className="w-4 h-4 text-blue-500 cursor-pointer hover:scale-110"
                           onClick={() =>
                             router.push(
-                              `/admin/resident-management/editResident/${resident._id}`
+                              `/admin/resident-management/editResident/${resident._id}`,
                             )
                           }
                         />

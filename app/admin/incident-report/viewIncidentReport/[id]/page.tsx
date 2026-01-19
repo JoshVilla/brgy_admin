@@ -21,6 +21,7 @@ import {
   AlertCircle,
   ImageIcon,
 } from "lucide-react";
+import withAuth from "@/lib/withAuth";
 
 const Page = () => {
   const params = useParams();
@@ -232,4 +233,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withAuth(Page);

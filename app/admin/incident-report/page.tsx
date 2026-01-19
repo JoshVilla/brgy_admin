@@ -23,6 +23,7 @@ import { usePagination } from "@/hooks/usePagination";
 import EditStatus from "./editStatus";
 import { formattedDate } from "@/utils/nonAsyncHelpers";
 import DeleteIncident from "./deleteIncident";
+import withAuth from "@/lib/withAuth";
 
 const page = () => {
   const router = useRouter();
@@ -143,10 +144,12 @@ const page = () => {
         {/* Desktop View */}
         <div className="hidden md:block">
           <Table>
-            <TableHeader>
+            <TableHeader className="bg-slate-800">
               <TableRow>
                 {tableHeaders.map((header, index) => (
-                  <TableHead key={index}>{header}</TableHead>
+                  <TableHead key={index} className="text-white">
+                    {header}
+                  </TableHead>
                 ))}
               </TableRow>
             </TableHeader>
@@ -158,4 +161,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default withAuth(page);

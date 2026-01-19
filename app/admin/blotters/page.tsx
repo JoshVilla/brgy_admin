@@ -65,7 +65,7 @@ const Page = () => {
   };
 
   const getStatusVariant = (
-    status: string
+    status: string,
   ): "default" | "secondary" | "destructive" | "outline" => {
     const variants: Record<
       string,
@@ -183,10 +183,12 @@ const Page = () => {
         <SearchForm searchProps={searchProps} onSearch={handleSearch} />
         <div className="hidden md:block">
           <Table>
-            <TableHeader>
+            <TableHeader className="bg-slate-800">
               <TableRow>
                 {tableHeaders.map((header, index) => (
-                  <TableHead key={index}>{header}</TableHead>
+                  <TableHead key={index} className="text-white">
+                    {header}
+                  </TableHead>
                 ))}
               </TableRow>
             </TableHeader>
@@ -254,7 +256,7 @@ const Page = () => {
                       className="flex-1"
                       onClick={() =>
                         router.push(
-                          `/admin/blotters/viewBlotter/${blotter._id}`
+                          `/admin/blotters/viewBlotter/${blotter._id}`,
                         )
                       }
                     >
@@ -267,7 +269,7 @@ const Page = () => {
                       className="flex-1"
                       onClick={() =>
                         router.push(
-                          `/admin/blotters/editBlotter/${blotter._id}`
+                          `/admin/blotters/editBlotter/${blotter._id}`,
                         )
                       }
                     >

@@ -117,10 +117,10 @@ const LegislativePage = () => {
               data.status === "Approved"
                 ? "bg-green-100 text-green-800"
                 : data.status === "Implemented"
-                ? "bg-blue-100 text-blue-800"
-                : data.status === "Draft"
-                ? "bg-gray-100 text-gray-800"
-                : "bg-yellow-100 text-yellow-800"
+                  ? "bg-blue-100 text-blue-800"
+                  : data.status === "Draft"
+                    ? "bg-gray-100 text-gray-800"
+                    : "bg-yellow-100 text-yellow-800"
             }`}
           >
             {data.status}
@@ -193,10 +193,10 @@ const LegislativePage = () => {
                     legislative.status === "Approved"
                       ? "bg-green-100 text-green-800"
                       : legislative.status === "Implemented"
-                      ? "bg-blue-100 text-blue-800"
-                      : legislative.status === "Draft"
-                      ? "bg-gray-100 text-gray-800"
-                      : "bg-yellow-100 text-yellow-800"
+                        ? "bg-blue-100 text-blue-800"
+                        : legislative.status === "Draft"
+                          ? "bg-gray-100 text-gray-800"
+                          : "bg-yellow-100 text-yellow-800"
                   }`}
                 >
                   {legislative.status}
@@ -237,7 +237,7 @@ const LegislativePage = () => {
                 className="flex-1"
                 onClick={() =>
                   route.push(
-                    `/admin/legislatives/editLegislative/${legislative._id}`
+                    `/admin/legislatives/editLegislative/${legislative._id}`,
                   )
                 }
               >
@@ -269,10 +269,12 @@ const LegislativePage = () => {
       {/* Desktop Table View */}
       <div className="hidden md:block">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-slate-800">
             <TableRow>
               {tableHeaders.map((header, index) => (
-                <TableHead key={index}>{header}</TableHead>
+                <TableHead key={index} className="text-white">
+                  {header}
+                </TableHead>
               ))}
             </TableRow>
           </TableHeader>

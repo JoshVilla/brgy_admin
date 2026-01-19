@@ -17,10 +17,11 @@ interface UpdatePrivilegesInput {
   setting?: number;
   activitylog?: number;
   incident?: number;
+  lostandfound?: number;
 }
 
 export const UpdatePrivilegesController = async (
-  data: UpdatePrivilegesInput
+  data: UpdatePrivilegesInput,
 ) => {
   try {
     const { adminId, ...privileges } = data;
@@ -50,25 +51,26 @@ export const UpdatePrivilegesController = async (
       setting: privileges.setting ?? 0,
       activitylog: privileges.activitylog ?? 0,
       incident: privileges.incident ?? 0,
+      lostandfound: privileges.lostandfound ?? 0,
     };
 
     // Find and update privileges
     const updatedPrivilege = await Privilage.findOneAndUpdate(
       { adminId },
       privilegeValues,
-      { new: true, upsert: true } // Create if doesn't exist
+      { new: true, upsert: true }, // Create if doesn't exist
     );
 
     // Check if admin has complete access (all privileges = 1)
     const hasCompleteAccess = Object.values(privilegeValues).every(
-      (value) => value === 1
+      (value) => value === 1,
     );
 
     // Update admin's isSuperAdmin status based on privileges
     await Admin.findByIdAndUpdate(
       adminId,
       { isSuperAdmin: hasCompleteAccess },
-      { new: true }
+      { new: true },
     );
 
     return {

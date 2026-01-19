@@ -46,6 +46,7 @@ interface IPrivilege {
   setting: number;
   activitylog: number;
   incident: number;
+  lostandfound: number;
 }
 
 const privilegeOptions = [
@@ -62,6 +63,7 @@ const privilegeOptions = [
   { key: "setting" as keyof IPrivilege, label: "Settings" },
   { key: "activitylog" as keyof IPrivilege, label: "Activity Logs" },
   { key: "incident" as keyof IPrivilege, label: "Incident Reports" },
+  { key: "lostandfound" as keyof IPrivilege, label: "Lost and Found" },
 ];
 
 const EditAdminStatus = ({ id, initialStatus, refetch }: Props) => {
@@ -81,10 +83,11 @@ const EditAdminStatus = ({ id, initialStatus, refetch }: Props) => {
     setting: 0,
     activitylog: 0,
     incident: 0,
+    lostandfound: 0,
   });
 
   const adminInfo = useSelector(
-    (state: RootState) => state.admin.adminInfo as IResAdmin
+    (state: RootState) => state.admin.adminInfo as IResAdmin,
   );
 
   // Fetch privileges when dialog opens
@@ -111,6 +114,7 @@ const EditAdminStatus = ({ id, initialStatus, refetch }: Props) => {
         setting,
         activitylog,
         incident,
+        lostandfound,
       } = privilegeData.data;
 
       setPrivileges({
@@ -127,6 +131,7 @@ const EditAdminStatus = ({ id, initialStatus, refetch }: Props) => {
         setting,
         activitylog,
         incident,
+        lostandfound,
       });
     }
   }, [privilegeData]);
@@ -140,7 +145,7 @@ const EditAdminStatus = ({ id, initialStatus, refetch }: Props) => {
 
   // Count enabled privileges
   const enabledPrivilegesCount = Object.values(privileges).filter(
-    (value) => value === 1
+    (value) => value === 1,
   ).length;
 
   // Check if at least one privilege is enabled
@@ -205,6 +210,7 @@ const EditAdminStatus = ({ id, initialStatus, refetch }: Props) => {
         setting: 1,
         activitylog: 1,
         incident: 1,
+        lostandfound: 1,
       };
 
       setPrivileges(allPrivileges);

@@ -20,6 +20,7 @@ import { toastError, toastSuccess } from "@/utils/helpers";
 
 import { IResResident } from "@/utils/types";
 import ResidentCombobox from "@/components/searchResidents";
+import withAuth from "@/lib/withAuth";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
@@ -80,7 +81,7 @@ const Page = () => {
       ...prev,
       reporterName: fullName,
       reporterContact: resident.contactNumber || "",
-      residentId: resident._id || "", // Changed from null to empty string
+      residentId: resident.userAppId || "",
     }));
   };
 
@@ -337,4 +338,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withAuth(Page);

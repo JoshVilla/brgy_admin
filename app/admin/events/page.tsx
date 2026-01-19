@@ -48,7 +48,7 @@ const page = () => {
 
   const eventData = data?.data || [];
 
-  const tableHeaders = ["Title", "Venue", "Date"];
+  const tableHeaders = ["Title", "Venue", "Date", "Actions"];
 
   const renderTableRows = () => {
     if (isLoading) {
@@ -121,10 +121,12 @@ const page = () => {
           {/* Desktop View */}
           <div className="hidden md:block">
             <Table>
-              <TableHeader>
+              <TableHeader className="bg-slate-800">
                 <TableRow>
                   {tableHeaders.map((header, index) => (
-                    <TableHead key={index}>{header}</TableHead>
+                    <TableHead key={index} className="text-white">
+                      {header}
+                    </TableHead>
                   ))}
                 </TableRow>
               </TableHeader>
@@ -186,7 +188,7 @@ const page = () => {
                             className="w-4 h-4 text-blue-500 cursor-pointer hover:scale-110"
                             onClick={() =>
                               router.push(
-                                `/admin/events/editEvent/${event._id}`
+                                `/admin/events/editEvent/${event._id}`,
                               )
                             }
                           />

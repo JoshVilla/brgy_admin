@@ -20,6 +20,7 @@ export async function GetIncidentReportController({
     if (filters._id) query._id = filters._id;
     if (filters.status) query.status = filters.status;
     if (filters.incidentType) query.incidentType = filters.incidentType;
+    if (filters.residentId) query.residentId = filters.residentId;
 
     const incidentData = await IncidentReport.find(query)
       .skip(skip)
