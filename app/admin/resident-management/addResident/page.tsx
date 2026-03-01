@@ -43,8 +43,10 @@ import { addResident } from "@/services/api";
 import { ImportResidentExcel } from "@/components/importResidentExcel";
 import withAuth from "@/lib/withAuth";
 import { toastError, toastSuccess } from "@/utils/helpers";
+import { useSileoToast } from "@/hooks/useSileoToast";
 
 const page = () => {
+  const { showToast } = useSileoToast();
   const formSchema = z.object({
     firstname: z.string().min(2, "First name must be at least 2 characters"),
     middlename: z.string().min(2, "Middle name must be at least 2 characters"),
@@ -82,14 +84,14 @@ const page = () => {
     mutationFn: addResident,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toastSuccess(data.message);
+        showToast("success", data.message);
         form.reset(); // This should now work correctly for all fields
       } else {
-        toastError(data.message);
+        showToast("error", data.message);
       }
     },
     onError: (error: any) => {
-      toastError(error.message || "An unexpected error occurred.");
+      showToast("error", error.message || "An unexpected error occurred.");
     },
   });
 

@@ -41,7 +41,7 @@ export async function LoginAdminController(params: {
     if (isPasswordMatched) {
       delete user.password; // Never expose password
       return {
-        message: "Login Successfully!",
+        message: "Login Successfully! Welcome back, " + user.username,
         isSuccess: true,
         data: user,
         settings: settings.general,
@@ -49,7 +49,7 @@ export async function LoginAdminController(params: {
       };
     } else {
       return {
-        message: "Password doesn't matched",
+        message: "Password doesn't matched, Try again!",
         isSuccess: false,
       };
     }

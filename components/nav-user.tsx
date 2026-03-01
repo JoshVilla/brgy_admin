@@ -31,7 +31,7 @@ import { IResAdmin } from "@/utils/types"; // Import IResAdmin type
 import { toast } from "sonner";
 import { clearSettings } from "@/redux/slice/settingsSlice";
 import { toastError, toastSuccess } from "@/utils/helpers";
-
+import { useSileoToast } from "@/hooks/useSileoToast";
 // Remove TokenInfo as we'll use IResAdmin from Redux
 // type TokenInfo = {
 //   username: string;
@@ -60,6 +60,7 @@ export function NavUser({
   const isSuperAdmin = adminInfo?.isSuperAdmin || false;
 
   const handleLogout = async () => {
+    const { showToast } = useSileoToast();
     try {
       dispatch(clearAdmin());
       dispatch(clearSettings());
@@ -67,7 +68,8 @@ export function NavUser({
       await persistor.flush();
       localStorage.removeItem("token");
       router.push("/");
-      toastSuccess("Log out Successfully!");
+      // toastSuccess("Log out Successfully!");
+      showToast("success", "Log out Successfully!");
     } catch (error: any) {
       console.log(error);
       toastError(error.message);

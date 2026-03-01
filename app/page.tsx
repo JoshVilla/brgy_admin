@@ -23,7 +23,8 @@ import { setAdminInfo } from "@/redux/slice/adminSlice";
 import { Loader2, LogIn, Shield } from "lucide-react";
 import { setSettingsInfo } from "@/redux/slice/settingsSlice";
 import { toastError, toastSuccess } from "@/utils/helpers";
-
+import { sileo } from "sileo";
+import { useSileoToast } from "@/hooks/useSileoToast";
 const schema = z.object({
   username: z.string().min(4, "Username must be at least 4 characters"),
   password: z
@@ -35,6 +36,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function Home() {
+  const { showToast } = useSileoToast();
   const dispatch = useDispatch();
   const router = useRouter();
   const {
@@ -53,9 +55,10 @@ export default function Home() {
         dispatch(setAdminInfo(data.data));
         dispatch(setSettingsInfo(data.settings));
         localStorage.setItem("token", data.token);
-        toastSuccess(data.message);
+        // toastSuccess(data.message);
+        showToast("success", data.message);
       } else {
-        toastError(data.message);
+        showToast("error", data.message);
       }
     },
     onError: (err) => {

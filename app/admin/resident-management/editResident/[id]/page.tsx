@@ -39,7 +39,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { addResident, editResident, getResident } from "@/services/api";
 import { IResResident } from "@/utils/types";
 import { toastError, toastSuccess } from "@/utils/helpers";
-
+import { useSileoToast } from "@/hooks/useSileoToast";
 // Zod schema
 const formSchema = z.object({
   firstname: z.string().min(2, "First name must be at least 2 characters"),
@@ -61,6 +61,8 @@ type ResidentFormValues = z.infer<typeof formSchema>;
 const Page = () => {
   const params = useParams();
   const [record, setRecord] = useState<IResResident | null>(null);
+
+  const { showToast } = useSileoToast();
 
   const form = useForm<ResidentFormValues>({
     resolver: zodResolver(formSchema),
@@ -108,13 +110,13 @@ const Page = () => {
     mutationFn: editResident,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toastSuccess(data.message);
+        showToast("success", data.message);
       } else {
-        toastError(data.message);
+        showToast("error", data.message);
       }
     },
     onError: (error: any) => {
-      toastError(error.message || "An unexpected error occurred.");
+      showToast("error", error.message || "An unexpected error occurred.");
     },
   });
 

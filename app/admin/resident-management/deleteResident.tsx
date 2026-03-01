@@ -13,8 +13,8 @@ import {
 import { Trash2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { deleteResident } from "@/services/api";
-import { toast } from "sonner";
 import { toastError, toastSuccess } from "@/utils/helpers";
+import { useSileoToast } from "@/hooks/useSileoToast";
 
 interface Props {
   id: string;
@@ -23,17 +23,17 @@ interface Props {
 }
 const DeleteResident = ({ id, refetch, setCurrentPage }: Props) => {
   const [openDialog, setOpenDialog] = useState(false);
-
+  const { showToast } = useSileoToast();
   const deleteMutation = useMutation({
     mutationFn: deleteResident,
     onSuccess: (data) => {
       if (data.isSuccess) {
-        toastSuccess(data.message);
+        showToast("success", data.message);
         setCurrentPage(1);
         refetch();
         setOpenDialog(false);
       } else {
-        toastError(data.message);
+        showToast("error", data.message);
       }
     },
     onError: (error) => {
