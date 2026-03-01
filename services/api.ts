@@ -199,3 +199,21 @@ export const updateStatusIncidentReport = async (params: any): Promise<any> => {
 export const deleteIncidentReport = async (params: any): Promise<any> => {
   return await post("/api/incident/deleteIncident", params);
 };
+
+
+//lost and found
+export const addLostAndFound = async (params: any): Promise<any> => {
+  return await post("/api/lostandfound/addLostAndFound", params, true);
+};
+
+export const getLostAndFound = async (params: any): Promise<any> => {
+  return await post("/api/lostandfound", params);
+};
+
+export const updateStatusLostAndFound = async (params: any): Promise<any> => {
+  return await post("/api/lostandfound/edit", params);
+};
+
+export const deleteLostAndFound = async (params: any): Promise<any> => {
+  return await post("/api/lostandfound/delete", params);
+};

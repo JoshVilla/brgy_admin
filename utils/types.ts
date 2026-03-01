@@ -6,6 +6,7 @@ import { IIncidentReport } from "@/models/incidentModel";
 import { ILegislative } from "@/models/legislativeModel";
 import { IRequest } from "@/models/requestModel";
 import { IResident } from "@/models/residentModel";
+import { ILostFound } from "@/models/lostandfound";
 
 export interface IApiResponse<T> {
   data: T;
@@ -51,4 +52,9 @@ export interface IResActivityLog extends IActivityLog {
 
 export interface IResIncidentReport extends IIncidentReport {
   _id: string;
+}
+
+export interface IResLostFound extends ILostFound {
+  _id: string;
+  createdAt: string;
 }
